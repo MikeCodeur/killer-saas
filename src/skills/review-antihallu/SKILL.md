@@ -1,5 +1,5 @@
 ---
-name: review-antihallu-skill
+name: review-antihallu
 description: Detects agent hallucinations in generated code — invented APIs, plausible-but-wrong logic, drift from the plan. Preloaded in the reviewer subagent.
 ---
 # Anti-hallucination review

@@ -1,5 +1,5 @@
 ---
-name: agentic-stories-skill
+name: agentic-stories
 description: Breaks a need or a PRD down into user stories an agent can execute. Use during the Stories phase of the killer-saas pipeline.
 ---
 # Agentic-ready story breakdown

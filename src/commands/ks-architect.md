@@ -6,7 +6,7 @@ You are setting the product's technical architecture.
 Read: docs/prd.md, docs/stories.md
 Output structure: @templates/architecture.md
 
-Apply the codebase-analysis-skill to analyze the starting code (boilerplate): structure, conventions, existing patterns. This is code the user didn't write — map it before deciding anything.
+Apply the codebase-analysis skill to analyze the starting code (boilerplate): structure, conventions, existing patterns. This is code the user didn't write — map it before deciding anything.
 
 Proceed as follows:
 1. Analyze the existing repo and document its actual structure and conventions.

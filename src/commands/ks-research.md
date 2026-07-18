@@ -9,7 +9,7 @@ Resolve $ARGUMENTS to the story id (`s<number>-<slug>`) against docs/stories.md.
 Read: docs/stories.md (the target story), docs/architecture.md, AGENTS.md
 Output structure: @templates/research.md
 
-Apply the codebase-analysis-skill to the story's scope: the CURRENT state of the code, not what the docs claim — the code may have drifted since previous stories.
+Apply the codebase-analysis skill to the story's scope: the CURRENT state of the code, not what the docs claim — the code may have drifted since previous stories.
 
 Proceed as follows:
 1. Isolate the target story and its acceptance criteria.

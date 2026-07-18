@@ -34,9 +34,9 @@ Three framing steps, once per product. Then one cycle per story — one story = 
 
 **/ks-prd** — frames the product by interviewing the user: need, target users, in/out scope, constraints, success criteria. Nothing is filled without validation. The WHAT and the WHY, never the HOW.
 
-**/ks-stories** — breaks the PRD into agentic-ready user stories (`agentic-stories-skill`): each story is an end-to-end shippable slice, with acceptance criteria that can become tests and agentic notes (files involved, traps) — the context a human would infer but an agent must read.
+**/ks-stories** — breaks the PRD into agentic-ready user stories (`agentic-stories` skill): each story is an end-to-end shippable slice, with acceptance criteria that can become tests and agentic notes (files involved, traps) — the context a human would infer but an agent must read.
 
-**/ks-architect** — analyzes the starting code (`codebase-analysis-skill`): actual structure, conventions and patterns of the boilerplate. Fills the architecture doc and injects the concrete conventions into `AGENTS.md`. The boilerplate is imposed: conform to it, don't rewrite it.
+**/ks-architect** — analyzes the starting code (`codebase-analysis` skill): actual structure, conventions and patterns of the boilerplate. Fills the architecture doc and injects the concrete conventions into `AGENTS.md`. The boilerplate is imposed: conform to it, don't rewrite it.
 
 ### Cycle (per story)
 
@@ -57,7 +57,7 @@ Five building blocks:
 | Block | Location | Role |
 | --- | --- | --- |
 | Commands | `.claude/commands/ks-*.md` | The process — each pipeline step is a command |
-| Skills | `.claude/skills/*-skill/` | The know-how — reusable, auto-invocable |
+| Skills | `.claude/skills/` | The know-how — reusable, auto-invocable |
 | Agents | `.claude/agents/` | Isolated execution — separate contexts, restricted tools |
 | Templates | `templates/` | The deliverables' structure — every doc has an imposed skeleton |
 | Rules | `AGENTS.md` (+ `CLAUDE.md` → `@AGENTS.md`) | The law of the repo — pipeline, conventions, DoD, gate |
@@ -65,16 +65,16 @@ Five building blocks:
 ### The subagents
 
 - **implementer** (sonnet model, `tdd-skill` preloaded) — implements the plan, task by task, in TDD. Touches neither the architecture nor the rules, adds nothing out of scope.
-- **reviewer** (opus model, `review-antihallu-skill` preloaded, read-only) — fresh eyes on code it didn't write. Judges, doesn't fix. A single critical = ship refused.
+- **reviewer** (opus model, `review-antihallu` skill preloaded, read-only) — fresh eyes on code it didn't write. Judges, doesn't fix. A single critical = ship refused.
 
 The model asymmetry is deliberate: implementation is framed by a validated plan (sonnet is enough); the review is the last safety net (opus).
 
 ### The skills
 
-- `agentic-stories-skill` — breakdown into agent-executable stories (Stories phase)
-- `codebase-analysis-skill` — code archaeology: structure, conventions, patterns (Architecture and Research phases)
+- `agentic-stories` — breakdown into agent-executable stories (Stories phase)
+- `codebase-analysis` — code archaeology: structure, conventions, patterns (Architecture and Research phases)
 - `tdd-skill` — test-first discipline (preloaded in `implementer`)
-- `review-antihallu-skill` — hallucination detection in generated code (preloaded in `reviewer`)
+- `review-antihallu` — hallucination detection in generated code (preloaded in `reviewer`)
 
 ## The gate
 

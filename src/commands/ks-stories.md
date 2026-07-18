@@ -6,7 +6,7 @@ You are breaking the PRD down into user stories.
 Read the PRD: docs/prd.md
 Output structure: @templates/stories.md
 
-Apply the agentic-stories-skill for the breakdown.
+Apply the agentic-stories skill for the breakdown.
 
 Proceed as follows:
 1. Break the need into stories: each one an end-to-end shippable slice, testable. Give each story an id: `s<number>-<short-slug>` (e.g. s01-submit-testimonial) — this id names every pipeline file and the story branch, so keep it short and stable.
