@@ -8,6 +8,7 @@ set -euo pipefail
 #   ./install.sh --global     Scope global : tooling dans ~/.claude, payload caché dans ~/.claude/killer-saas
 #   ./install.sh init         Pose templates + rules dans le projet courant (pour les installs globales)
 #   ./install.sh update       Met à jour le tooling + templates du projet courant (préserve tes modifs)
+#   --force                    En complément d'un mode : écrase aussi les templates modifiés localement
 #
 # curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash
 
@@ -29,6 +30,16 @@ fi
 VERSION="$(git -C "$PAYLOAD_ROOT" rev-parse --short HEAD 2>/dev/null || date +%Y-%m-%d)"
 
 CACHE="$HOME/.claude/killer-saas"
+
+# --- Arguments : mode + --force ---
+FORCE=0
+MODE=""
+for a in "$@"; do
+  case "$a" in
+    -f|--force) FORCE=1 ;;
+    *) MODE="$a" ;;
+  esac
+done
 
 # Supprime les fichiers posés par une install précédente (listés dans .ks-manifest) — jamais rien d'autre.
 clean_tooling() {
@@ -67,8 +78,11 @@ sync_templates() {
       cp "$f" "./templates/$name"; cp "$f" "$orig/$name"
     elif cmp -s "./templates/$name" "$f"; then
       cp "$f" "$orig/$name"
+    elif [ "$FORCE" = 1 ]; then
+      cp "$f" "./templates/$name"; cp "$f" "$orig/$name"
+      echo "↻  templates/$name écrasé (--force)."
     else
-      echo "⚠  templates/$name modifié localement — non écrasé (nouvelle version dispo dans le repo killer-saas)."
+      echo "⚠  templates/$name modifié localement — non écrasé (relance avec --force pour l'écraser)."
     fi
   done
 }
@@ -89,7 +103,7 @@ drop_project_payload() {
   fi
 }
 
-case "${1:-}" in
+case "$MODE" in
   ""|--project)
     copy_tooling "./.claude"
     drop_project_payload "$SRC"
@@ -127,8 +141,8 @@ case "${1:-}" in
     ;;
 
   *)
-    echo "Option inconnue : $1" >&2
-    echo "Usage : ./install.sh [--global | init | update]" >&2
+    echo "Option inconnue : $MODE" >&2
+    echo "Usage : ./install.sh [--global | init | update] [--force]" >&2
     exit 1
     ;;
 esac

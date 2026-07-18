@@ -36,6 +36,8 @@ From your project's root:
     ~/tools/killer-saas/install.sh update
     # or, without a clone:
     curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash -s -- update
+    # overwrite locally modified templates too:
+    curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash -s -- update --force
 
 What it does — and doesn't:
 - Cleanly replaces the method's commands, skills and agents (tracked in `.claude/.ks-manifest` — your own commands/skills are never touched, renamed or removed files leave no ghosts).
