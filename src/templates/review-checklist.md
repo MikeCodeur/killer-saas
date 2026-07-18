@@ -14,6 +14,7 @@
 ## Rules compliance
 - [ ] Repo conventions followed (AGENTS.md)
 - [ ] No accepted ADR contradicted (docs/decisions/)
+- [ ] Design system respected — components/tokens from docs/design-system.md, screen matches the intent of docs/designs/<id>.md (UI stories)
 
 ## Tests
 - [ ] Test suite run by the reviewer, passing

@@ -6,10 +6,12 @@ You are planning a story's implementation. Target story: $ARGUMENTS
 
 Resolve $ARGUMENTS to the story id (`s<number>-<slug>`) against docs/stories.md. If there is no unambiguous match, list the available stories and stop.
 
-Read: docs/stories.md (the target story), docs/research/<id>.md (if it exists), docs/architecture.md, AGENTS.md
+Read: docs/stories.md (the target story), docs/research/<id>.md (if it exists), docs/design-system.md and docs/designs/<id>.md (if they exist), docs/architecture.md, AGENTS.md
 Output structure: @templates/plan.md
 
 If docs/research/<id>.md doesn't exist, point out that /ks-research <id> is recommended before planning — without research, the plan relies on possibly stale docs. Continue only if I confirm.
+
+If the story has UI, the plan follows the screen defined in docs/designs/<id>.md: it references the design system's components and never invents new ones. The HTML mockup is a reference, not a source of code.
 
 Proceed as follows:
 1. Isolate the target story and its acceptance criteria.

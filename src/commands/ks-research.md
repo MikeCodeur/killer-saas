@@ -21,4 +21,4 @@ Proceed as follows:
 
 Write no code. Plan nothing: this command produces verified context, not a plan.
 
-End with: "Research ready in docs/research/<id>.md. Next step: /ks-plan <id>"
+End with: "Research ready in docs/research/<id>.md. Next step: /ks-design <id> (UI story) or /ks-plan <id>"

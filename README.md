@@ -4,7 +4,7 @@ A complete agentic pipeline to build and ship a SaaS, from need to production.
 One method = a suite of commands. One principle = no direct coding.
 
 ## Pipeline
-PRD → User Stories → Architecture → then, per story: Research → Plan → Execute → Review → Ship
+PRD → User Stories → Architecture + Design System → then, per story: Research → Design → Plan → Execute → Review → Ship
 
 Full method documentation: [DOC.md](DOC.md)
 
@@ -48,8 +48,10 @@ What it does — and doesn't:
     /ks-prd <idea>
     /ks-stories
     /ks-architect
+    /ks-design-system
     # then, per story:
     /ks-research <story>
+    /ks-design <story>
     /ks-plan <story>
     /ks-execute <story>
     /ks-review <story>

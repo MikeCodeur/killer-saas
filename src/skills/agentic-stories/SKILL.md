@@ -11,7 +11,7 @@ Principles:
 - Verifiable acceptance criteria: each one must be able to become a test. "The form works" is not a criterion; "submitting a valid form shows a confirmation and persists the entry" is.
 - Agentic notes: the files involved, the constraints, the known traps — the context a human would infer but an agent must read.
 - Explicit dependencies: order the stories so that none assumes work not yet done.
-- Size: implementable in one Research → Plan → Execute → Review → Ship cycle. If the plan would exceed roughly ten tasks, the story is too big: split it.
+- Size: implementable in one Research → Design → Plan → Execute → Review → Ship cycle. If the plan would exceed roughly ten tasks, the story is too big: split it.
 - Id: every story gets `s<number>-<short-slug>` (e.g. s01-submit-testimonial), reused verbatim in every pipeline file and in the branch name.
 
 Example — bad vs good:

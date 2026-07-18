@@ -15,4 +15,4 @@ Proceed as follows:
 4. Record each imposed structural decision (stack, patterns, integrations) as an ADR in `docs/decisions/NNN-<slug>.md`, following @templates/adr.md — with the considered options and why they were rejected.
 5. Write the architecture to `docs/architecture.md` and commit it together with AGENTS.md and the ADRs on the default branch (docs: architecture).
 
-End with: "Architecture ready + AGENTS.md updated. Next step: /ks-research <story>"
+End with: "Architecture ready + AGENTS.md updated. Next step: /ks-design-system (once), then /ks-research <story>"

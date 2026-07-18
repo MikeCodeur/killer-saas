@@ -13,18 +13,20 @@ Three rules, enforced by the tooling — not by discipline:
 
 ## The pipeline
 
-Three framing steps, once per product. Then one cycle per story — one story = one branch (`feature/<id>`) = one PR. Every story has an id (`s<number>-<short-slug>`, e.g. `s01-submit-testimonial`) that names every pipeline file and the branch.
+Four framing steps, once per product. Then one cycle per story — one story = one branch (`feature/<id>`) = one PR. Every story has an id (`s<number>-<short-slug>`, e.g. `s01-submit-testimonial`) that names every pipeline file and the branch.
 
-    PRD → User Stories → Architecture
+    PRD → User Stories → Architecture → Design System
     then, per story:
-    Research → Plan → Execute → Review → Ship
+    Research → Design → Plan → Execute → Review → Ship
 
 | Step | Command | Role | Output |
 | --- | --- | --- | --- |
 | PRD | `/ks-prd <idea>` | The WHAT and the WHY: need, users, scope | `docs/prd.md` |
 | Stories | `/ks-stories` | Breakdown into shippable, agentic-ready slices | `docs/stories.md` |
 | Architecture | `/ks-architect` | The HOW: stack, conventions, patterns | `docs/architecture.md` + `AGENTS.md` |
+| Design System | `/ks-design-system` | Captures tokens, components, UI patterns — records, never draws | `docs/design-system.md` |
 | Research | `/ks-research <story>` | The real state of the code within the story's scope | `docs/research/<story>.md` |
+| Design | `/ks-design <story>` | The story's screen, anchored to the design system (agent or Claude Design / Gemini) | `docs/designs/<story>.md` + `.html` |
 | Plan | `/ks-plan <story>` | Sequenced, small, verifiable tasks | `docs/plans/<story>.md` |
 | Execute | `/ks-execute <story>` | TDD implementation by the `implementer` subagent | code + tests + commits |
 | Review | `/ks-review <story>` | Anti-hallucination review by the `reviewer` subagent | `docs/reviews/<story>.md` |
@@ -38,15 +40,19 @@ Three framing steps, once per product. Then one cycle per story — one story = 
 
 **/ks-architect** — analyzes the starting code (`codebase-analysis` skill): actual structure, conventions and patterns of the boilerplate. Fills the architecture doc and injects the concrete conventions into `AGENTS.md`. The boilerplate is imposed: conform to it, don't rewrite it.
 
+**/ks-design-system** — captures the global design system into `docs/design-system.md`: tokens, available components (inventoried from the boilerplate), imposed UI patterns, do/don't. It records and structures — it never invents visuals: the direction comes from the user (Claude Design / Gemini output) or from the boilerplate's existing system. Fail-closed: no source, no design system. Like `AGENTS.md` and the ADRs, it's a transverse asset: set once, read at every story.
+
 ### Cycle (per story)
 
 **/ks-research** — explores the story's real scope before any planning: files involved in their current state, verified APIs and functions (exact name, signature, location), traps and dependencies. Framing docs go stale as soon as story 2 ships; research anchors the plan in today's code, not day one's. It is anti-hallucination applied upstream: the review detects, the research prevents.
+
+**/ks-design** — derives the story's screen from the design system. Fail-closed: no `docs/design-system.md`, no design. Two paths, user's choice: the **agent** generates it (structured `.md` + low-fi HTML mockup using only the system's tokens), or the user produces it in **Claude Design / Gemini** and the agent captures the result into the same output files. Needs the system doesn't cover become "design system gaps" — recorded, never invented. The mockup is a reference, never pasted into production: Execute builds the screen with the boilerplate's real components. Stories without UI skip this step.
 
 **/ks-plan** — breaks the story into ordered tasks, each one small and verifiable, based on the research. Anticipates touched files and the test strategy. Never produces code. The plan is validated by the user before execution.
 
 **/ks-execute** — delegates the implementation to the `implementer` subagent, which works on the story branch `feature/<id>` (strict TDD: failing test → minimal code → refactor, one commit per task). Fail-closed: no plan in `docs/plans/<id>.md`, no execution. The main context has neither Write, nor Edit, nor Bash — it can't code even if it "wanted" to. If a previous review blocked the story, it runs in **fix mode**: the review findings are fed to the implementer and fixed first.
 
-**/ks-review** — delegates the review to the `reviewer` subagent: fresh context, read-only, opus model. The reviewer judges the story diff (`git diff <default-branch>...feature/<id>`), runs the test suite itself, and verifies every API/import in the diff actually exists. Each issue classified critical / major / minor. The report ends with two machine-parsable lines: `Max severity: ...` and `Ship allowed: yes|no`.
+**/ks-review** — delegates the review to the `reviewer` subagent: fresh context, read-only, opus model. The reviewer judges the story diff (`git diff <default-branch>...feature/<id>`), runs the test suite itself, and verifies every API/import in the diff actually exists. When the story has a design, it also checks conformity to the design system and to the screen's intent — off-system components or tokens are drift (major by default). Each issue classified critical / major / minor. The report ends with two machine-parsable lines: `Max severity: ...` and `Ship allowed: yes|no`.
 
 **/ks-ship** — starts with the mechanical gate: `grep '^Ship allowed: yes' docs/reviews/<id>.md` — no file or a `no` verdict stops everything. Then verifies tests on the branch, pushes, opens a clean PR, merges, deploys, confirms it's live.
 
@@ -68,9 +74,10 @@ Everything the pipeline produces is markdown under `docs/`, versioned by git. No
 | Research, plan, review (per story) | `docs/research/<id>.md`, `docs/plans/<id>.md`, `docs/reviews/<id>.md` |
 | Tasks + progress | checkboxes inside `docs/plans/<id>.md`, ticked commit by commit |
 | Decisions | `docs/decisions/NNN-<slug>.md` — MADR-style ADRs: context, options rejected and why, consequences. Immutable, superseded not edited |
+| Design | `docs/design-system.md` (global, transverse) ; `docs/designs/<id>.md` + `.html` per story — the mockup is a reference, never production code |
 | Pipeline state | derived — file existence + `Ship allowed:` verdict + git. Never stored, so never stale |
 
-Lifecycle: framing docs are committed on the default branch at the end of their phase. Story docs travel with the story — the implementer's first commit on `feature/<id>` brings the research and the plan, each task commit ticks its checkbox, `/ks-ship` commits the review. Every PR therefore carries its own research, plan and review: the audit trail is the PR itself. Structural decisions get an ADR in `docs/decisions/`: framing ADRs commit on the default branch, story ADRs travel with their PR.
+Lifecycle: framing docs are committed on the default branch at the end of their phase. Story docs travel with the story — the implementer's first commit on `feature/<id>` brings the research, the design and the plan, each task commit ticks its checkbox, `/ks-ship` commits the review. Every PR therefore carries its own research, design, plan and review: the audit trail is the PR itself. Structural decisions get an ADR in `docs/decisions/`: framing ADRs commit on the default branch, story ADRs travel with their PR.
 
 ## Tooling anatomy
 
