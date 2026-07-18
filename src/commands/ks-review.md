@@ -25,7 +25,7 @@ If you can't invoke the Agent tool, stop and report the error. Don't improvise.
 Resolve $ARGUMENTS to the story id (`s<number>-<slug>`) against docs/stories.md, then invoke the Agent tool:
 - subagent_type: reviewer
 - description: Anti-hallucination review of story <id>
-- prompt: Review story <id>. The story diff is `git diff <default-branch>...feature/<id>` — judge that diff, and only that diff, against docs/plans/<id>.md and AGENTS.md. Run the test suite yourself; don't trust reported results. The review-antihallu skill is preloaded. Fill the checklist from templates/review-checklist.md, classify each issue (critical / major / minor), and end your report with the exact lines "Max severity: <critical|major|minor|none>" and "Ship allowed: <yes|no>".
+- prompt: Review story <id>. The story diff is `git diff <default-branch>...feature/<id>` — judge that diff, and only that diff, against docs/plans/<id>.md, AGENTS.md and the accepted ADRs in docs/decisions/. Run the test suite yourself; don't trust reported results. The review-antihallu skill is preloaded. Fill the checklist from templates/review-checklist.md, classify each issue (critical / major / minor), and end your report with the exact lines "Max severity: <critical|major|minor|none>" and "Ship allowed: <yes|no>".
 
 Wait for the verdict.
 

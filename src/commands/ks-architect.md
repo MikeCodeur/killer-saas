@@ -12,6 +12,7 @@ Proceed as follows:
 1. Analyze the existing repo and document its actual structure and conventions.
 2. Fill the architecture template from this analysis + the PRD needs.
 3. Check/complete the AGENTS.md file at the root with the concrete technical conventions ("Technical conventions" section).
-4. Write the architecture to `docs/architecture.md` and commit it together with AGENTS.md on the default branch (docs: architecture).
+4. Record each imposed structural decision (stack, patterns, integrations) as an ADR in `docs/decisions/NNN-<slug>.md`, following @templates/adr.md — with the considered options and why they were rejected.
+5. Write the architecture to `docs/architecture.md` and commit it together with AGENTS.md and the ADRs on the default branch (docs: architecture).
 
 End with: "Architecture ready + AGENTS.md updated. Next step: /ks-research <story>"

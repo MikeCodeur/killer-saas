@@ -56,6 +56,8 @@ Three framing steps, once per product. Then one cycle per story — one story = 
 
 **/ks-help** — prints the pipeline map: the phases in order, the single rule, the per-story cycle. Written in French — it's the user-facing cheat sheet for the community. User-invoked only (`disable-model-invocation: true`).
 
+**/ks-status** — derives the project's state from the files: framing docs present, per-story research/plan/review, checkbox progress (x/y tasks), merged branches — then prints the next useful command. Nothing is stored: the files are the state.
+
 ## Data & storage
 
 Everything the pipeline produces is markdown under `docs/`, versioned by git. No database, no state file, no external tracker.
@@ -65,9 +67,10 @@ Everything the pipeline produces is markdown under `docs/`, versioned by git. No
 | PRD, stories, architecture | `docs/prd.md`, `docs/stories.md`, `docs/architecture.md` |
 | Research, plan, review (per story) | `docs/research/<id>.md`, `docs/plans/<id>.md`, `docs/reviews/<id>.md` |
 | Tasks + progress | checkboxes inside `docs/plans/<id>.md`, ticked commit by commit |
+| Decisions | `docs/decisions/NNN-<slug>.md` — MADR-style ADRs: context, options rejected and why, consequences. Immutable, superseded not edited |
 | Pipeline state | derived — file existence + `Ship allowed:` verdict + git. Never stored, so never stale |
 
-Lifecycle: framing docs are committed on the default branch at the end of their phase. Story docs travel with the story — the implementer's first commit on `feature/<id>` brings the research and the plan, each task commit ticks its checkbox, `/ks-ship` commits the review. Every PR therefore carries its own research, plan and review: the audit trail is the PR itself.
+Lifecycle: framing docs are committed on the default branch at the end of their phase. Story docs travel with the story — the implementer's first commit on `feature/<id>` brings the research and the plan, each task commit ticks its checkbox, `/ks-ship` commits the review. Every PR therefore carries its own research, plan and review: the audit trail is the PR itself. Structural decisions get an ADR in `docs/decisions/`: framing ADRs commit on the default branch, story ADRs travel with their PR.
 
 ## Tooling anatomy
 

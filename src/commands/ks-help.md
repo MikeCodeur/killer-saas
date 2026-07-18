@@ -21,3 +21,4 @@ Règle unique : interdit de coder en direct. Chaque feature passe par le pipelin
 Bloqué en review sur un critique → retour /ks-execute (fix mode). Sinon → /ks-ship.
 
 Cycle complet d'une story en une commande (checkpoints humains conservés) : /ks-orchestrator <story>
+Où en est le projet (avancement par story, prochaine commande) : /ks-status

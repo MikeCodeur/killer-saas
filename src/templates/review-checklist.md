@@ -13,6 +13,7 @@
 
 ## Rules compliance
 - [ ] Repo conventions followed (AGENTS.md)
+- [ ] No accepted ADR contradicted (docs/decisions/)
 
 ## Tests
 - [ ] Test suite run by the reviewer, passing

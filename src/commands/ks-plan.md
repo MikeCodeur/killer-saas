@@ -15,7 +15,8 @@ Proceed as follows:
 1. Isolate the target story and its acceptance criteria.
 2. Break it into ordered tasks, each one small and verifiable. Lean on the research: real files, verified APIs, known traps. A task that can't fail a test isn't a task — merge it into one that can.
 3. Anticipate the touched files and the test strategy. If the plan grows past roughly ten tasks, the story is too big: say so and suggest a split instead of a bloated plan.
-4. Write the plan to `docs/plans/<id>.md`.
+4. If planning forces a structural choice (library, pattern, data model) with rejected alternatives, record it as an ADR in `docs/decisions/` (@templates/adr.md) — it will travel with the story branch.
+5. Write the plan to `docs/plans/<id>.md`.
 
 Write no code. This command produces a plan, not code.
 

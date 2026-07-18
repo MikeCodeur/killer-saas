@@ -22,6 +22,7 @@ If a task can't be done as planned (missing file, API mismatch, ambiguous step):
 
 Constraints:
 - Strict compliance with AGENTS.md.
+- Accepted ADRs in docs/decisions/ are law, same as AGENTS.md. A structural choice they don't settle → stop and report; decisions are made at plan level, not mid-implementation.
 - You implement only what the plan specifies. No out-of-scope additions.
 - You touch neither the architecture nor the rules.
 

@@ -20,6 +20,7 @@ No code is written before the story has a validated plan (`/ks-plan`). No featur
 Utilities:
 - `/ks-orchestrator`  runs a story's full cycle with human checkpoints (plan validation, ship confirmation)
 - `/ks-help`          prints the pipeline map (French, user-facing cheat sheet)
+- `/ks-status`        derives the project's pipeline state from the files (framing, per-story progress, next command)
 
 One feature = one Research → Plan → Execute → Review → Ship cycle = one branch = one PR.
 
@@ -40,6 +41,7 @@ All pipeline data lives in markdown files under docs/, versioned by git. No data
 - Framing docs — docs/prd.md, docs/stories.md, docs/architecture.md: committed on the default branch at the end of their phase.
 - Story docs — docs/research/<id>.md, docs/plans/<id>.md, docs/reviews/<id>.md: committed on feature/<id>. The implementer's first commit brings the research and the plan; /ks-ship commits the review. Every PR carries its own research, plan and review.
 - Task progress — the checkboxes in docs/plans/<id>.md: the implementer ticks each task in the same atomic commit as the task's code. The plan file is the live progress tracker.
+- Decisions — docs/decisions/NNN-<slug>.md (MADR format, @templates/adr.md): one file per structural decision, with the considered options and why they were rejected. Immutable: a change means a new ADR superseding the old one. Framing decisions commit on the default branch; story decisions travel with feature/<id>.
 
 ## Technical conventions
 << IP Mike: boilerplate structure, stack, patterns, naming, commit rules. >>

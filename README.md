@@ -44,5 +44,8 @@ Global (ks-* commands available in all your repos):
     # or run a story's full cycle (with human checkpoints):
     /ks-orchestrator <story>
 
+    # where does the project stand?
+    /ks-status
+
     # lost? pipeline map (français) :
     /ks-help
