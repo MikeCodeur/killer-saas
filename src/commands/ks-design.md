@@ -40,10 +40,10 @@ Read docs/stories.md, resolve the target story id (`s<number>-<slug>`) and isola
 - docs/designs/<id>.md (structure: @templates/design-screen.md)
 - docs/designs/<id>.html — a static HTML mockup of the screen, using EXCLUSIVELY the design system's tokens (colors, typography, spacing). Low fidelity. Goal: communicate layout + states, not be production code.
 
-**EXTERNAL path (Claude Design / Gemini)** — the user produces the screen there and brings back the result (exported HTML, screenshot, or description). You:
-- record/normalize the mockup into docs/designs/<id>.html
-- write docs/designs/<id>.md (structure: @templates/design-screen.md) describing the screen and pointing to the HTML.
-If the user brought nothing back → wait. Don't generate in their place, unless they explicitly switch to the Agent path.
+**EXTERNAL path (Claude Design / Gemini)** — you write the brief, the user produces the screens:
+1. Write docs/designs/<id>-brief.md (structure: @templates/design-brief.md): every screen with layout, exact fields and actions, the four states, and the design system constraints COPIED IN (tokens, components, do/don't) so the brief is self-contained and pasteable into the external tool. Out-of-scope stated. This file is the deliverable of this step — not a chat message.
+2. The user takes the brief to Claude Design / Gemini and brings back the result (exported HTML, screenshot, or description). You then: record/normalize the mockup into docs/designs/<id>.html, and write docs/designs/<id>.md (structure: @templates/design-screen.md) describing the screen and pointing to the HTML.
+If the user brought nothing back → end with: "Brief ready in docs/designs/<id>-brief.md — take it to your design tool, then rerun /ks-design <id> with the result." Don't generate in their place, unless they explicitly switch to the Agent path.
 
 ### Step 5 — Gaps
 Any need the design system doesn't cover → record it under "Design system gaps" in the .md. DON'T invent it.

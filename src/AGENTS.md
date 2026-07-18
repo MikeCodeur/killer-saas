@@ -50,7 +50,7 @@ The global design system lives in `docs/design-system.md` (components + tokens, 
 All pipeline data lives in markdown files under docs/, versioned by git. No database, no state file: the pipeline state is derived from the files (a story is planned if docs/plans/<id>.md exists, shipped if its review says `Ship allowed: yes` and the branch is merged) — a derived state can't go stale.
 
 - Framing docs — docs/prd.md, docs/stories.md, docs/architecture.md, docs/design-system.md: committed on the default branch at the end of their phase.
-- Story docs — docs/research/<id>.md, docs/designs/<id>.md + .html, docs/plans/<id>.md, docs/reviews/<id>.md: committed on feature/<id>. The implementer's first commit brings the research, the design and the plan; /ks-ship commits the review. Every PR carries its own research, design, plan and review.
+- Story docs — docs/research/<id>.md, docs/designs/<id>* (brief, md, html), docs/plans/<id>.md, docs/reviews/<id>.md: committed on feature/<id>. The implementer's first commit brings the research, the design and the plan; /ks-ship commits the review. Every PR carries its own research, design, plan and review.
 - Task progress — the checkboxes in docs/plans/<id>.md: the implementer ticks each task in the same atomic commit as the task's code. The plan file is the live progress tracker.
 - Decisions — docs/decisions/NNN-<slug>.md (MADR format, @templates/adr.md): one file per structural decision, with the considered options and why they were rejected. Immutable: a change means a new ADR superseding the old one. Framing decisions commit on the default branch; story decisions travel with feature/<id>.
 
