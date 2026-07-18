@@ -112,10 +112,12 @@ The review returns a verdict written to `docs/reviews/<id>.md`, ending with the 
 
 ## Install
 
-| Mode | Command | Effect |
+The installer always targets the directory you run it from — your project's root, not this repo. Get it either via the one-liner (it fetches the repo by itself) or by cloning this repo somewhere and calling its `install.sh` from your project.
+
+| Mode | From your project's root | Effect |
 | --- | --- | --- |
-| Project (default) | `./install.sh` | `.claude/` + `templates/` + `AGENTS.md`/`CLAUDE.md` in the current project |
-| Global | `./install.sh --global` | Tooling in `~/.claude` (commands everywhere), payload in `~/.claude/killer-saas` |
+| Project (default) | `curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh \| bash` — or `<clone>/install.sh` | `.claude/` + `templates/` + `AGENTS.md`/`CLAUDE.md` in the current project |
+| Global | `<clone>/install.sh --global` | Tooling in `~/.claude` (commands everywhere), payload in `~/.claude/killer-saas` |
 | Per project, after global | `~/.claude/killer-saas/install.sh init` | Drops templates + rules in the current project |
 
 `CLAUDE.md` is not shipped: the installer creates it (or appends to it) with `@AGENTS.md`, so Claude Code loads the rules.

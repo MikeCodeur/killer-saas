@@ -10,19 +10,24 @@ Full method documentation: [DOC.md](DOC.md)
 
 ## Install
 
-In a project:
+You don't clone this repo into your project: the installer drops its files into whatever directory you run it from.
 
-    ./install.sh
+Quickest — one-liner, from your project's root (the script fetches the repo itself):
 
-Global (commands in all your repos):
-
-    ./install.sh --global
-    # then, per project:
-    ~/.claude/killer-saas/install.sh init
-
-One-liner (read the script before running it):
-
+    cd your-project
     curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash
+
+Prefer to read before you run? Clone the repo somewhere, then run the script from your project's root:
+
+    git clone https://github.com/MikeCodeur/killer-saas.git ~/tools/killer-saas
+    cd your-project
+    ~/tools/killer-saas/install.sh
+
+Global (ks-* commands available in all your repos):
+
+    ~/tools/killer-saas/install.sh --global
+    # then, in each project:
+    ~/.claude/killer-saas/install.sh init
 
 ## Usage
 
