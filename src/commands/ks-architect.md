@@ -1,5 +1,12 @@
 ---
 description: Set the technical HOW — stack, patterns, conventions, design
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - Write
+  - Edit
+  - Bash
 ---
 You are setting the product's technical architecture.
 

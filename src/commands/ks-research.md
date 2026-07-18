@@ -1,6 +1,12 @@
 ---
 description: Explore a story's real context before planning — current code, APIs, traps
 argument-hint: <story id or name>
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - Write
+  - Bash
 ---
 You are exploring a story's context before it gets planned. Target story: $ARGUMENTS
 

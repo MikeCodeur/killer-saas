@@ -1,6 +1,6 @@
 # killer-saas
 
-A complete agentic pipeline to build and ship a SaaS, from need to production.
+A complete agentic pipeline to kill a SaaS: pick a target, cut the 20% that matters, rebuild it on your boilerplate, ship it to production.
 One method = a suite of commands. One principle = no direct coding.
 
 ## Pipeline
@@ -45,7 +45,7 @@ What it does — and doesn't:
 
 ## Usage
 
-    /ks-prd <idea>
+    /ks-prd <target-saas>
     /ks-stories
     /ks-architect
     /ks-design-system

@@ -1,6 +1,13 @@
 ---
 description: Capture and structure the global design system into docs/design-system.md. Doesn't generate visuals — it records them.
 argument-hint: (optional) source of the visual direction
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - Write
+  - Bash
+  - AskUserQuestion
 ---
 # ks-design-system — Global design system capture
 

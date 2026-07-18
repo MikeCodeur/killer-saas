@@ -7,7 +7,7 @@ disable-model-invocation: true
 Règle unique : interdit de coder en direct. Chaque feature passe par le pipeline.
 
 ## Une fois par projet
-1. /ks-prd <idée>      — cadre le produit (QUOI + POURQUOI)
+1. /ks-prd <cible>     — cadre le kill : SaaS cible, périmètre, QUOI + POURQUOI
 2. /ks-stories         — découpe en user stories agentic-ready
 3. /ks-architect       — stack, conventions, rules
 4. /ks-design-system   — capture le design system global (tokens, composants)

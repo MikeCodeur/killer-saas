@@ -1,7 +1,9 @@
 ---
 description: Open the PR, merge, deploy to production
 argument-hint: <story id or name>
-allowed-tools: Bash
+allowed-tools:
+  - Read
+  - Bash
 ---
 You are shipping a story. Target story: $ARGUMENTS
 

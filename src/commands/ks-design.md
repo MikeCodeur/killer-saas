@@ -4,6 +4,7 @@ argument-hint: <story id or name> [--agent | --claude-design | --gemini]
 allowed-tools:
   - Read
   - Glob
+  - Grep
   - Write
   - AskUserQuestion
 ---
@@ -31,7 +32,7 @@ If the user didn't specify the path in $ARGUMENTS, ask (AskUserQuestion): "Who p
 - Gemini (same)
 
 ### Step 3 — Read the story
-Read docs/stories.md, resolve the target story id (`s<number>-<slug>`) and isolate its acceptance criteria. Read docs/research/<id>.md if it exists — its anchor points tell you which pages and layouts the screen plugs into. The design covers this screen only.
+Read docs/stories.md, resolve the target story id (`s<number>-<slug>`) and isolate its acceptance criteria. Read docs/research/<id>.md if it exists — its anchor points tell you which pages and layouts the screen plugs into. If the PRD names a target SaaS, its equivalent screen is a layout/UX reference — structure and states only, never visual identity: tokens and components come exclusively from the design system. The design covers this screen only.
 
 ### Step 4 — Produce, per the chosen path
 

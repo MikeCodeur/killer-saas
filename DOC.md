@@ -1,6 +1,6 @@
 # killer-saas — Method documentation
 
-A complete agentic pipeline to build and ship a SaaS with Claude Code, from need to production.
+A complete agentic pipeline to kill a SaaS with Claude Code: pick a target, cut the 20% that matters, rebuild it on your boilerplate, ship it to production.
 One method = a suite of commands. One principle = no direct coding.
 
 ## Philosophy
@@ -21,7 +21,7 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 
 | Step | Command | Role | Output |
 | --- | --- | --- | --- |
-| PRD | `/ks-prd <idea>` | The WHAT and the WHY: need, users, scope | `docs/prd.md` |
+| PRD | `/ks-prd <target>` | The kill frame: target SaaS, kill mode, perimeter — the WHAT and the WHY | `docs/prd.md` |
 | Stories | `/ks-stories` | Breakdown into shippable, agentic-ready slices | `docs/stories.md` |
 | Architecture | `/ks-architect` | The HOW: stack, conventions, patterns | `docs/architecture.md` + `AGENTS.md` |
 | Design System | `/ks-design-system` | Captures tokens, components, UI patterns — records, never draws | `docs/design-system.md` |
@@ -34,9 +34,9 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 
 ### Framing (once per product)
 
-**/ks-prd** — frames the product by interviewing the user: need, target users, in/out scope, constraints, success criteria. Nothing is filled without validation. The WHAT and the WHY, never the HOW.
+**/ks-prd** — frames the kill by interviewing the user, starting with the killer-saas preamble: which target SaaS, kill mode (internal replacement vs competing product), why kill it, and the perimeter — the 20% core loop that delivers the value, each replicated feature scored for complexity (1-5, heavy features default to the graveyard), the graveyard of explicitly dropped features, and the angle beyond parity. Then the classic frame: need, users, constraints, success criteria (parity on the perimeter + the angle). Nothing is filled without validation. The WHAT and the WHY, never the HOW.
 
-**/ks-stories** — breaks the PRD into agentic-ready user stories (`agentic-stories` skill): each story is an end-to-end shippable slice, with acceptance criteria that can become tests and agentic notes (files involved, traps) — the context a human would infer but an agent must read.
+**/ks-stories** — breaks the PRD into agentic-ready user stories (`agentic-stories` skill): each story is an end-to-end shippable slice, with acceptance criteria that can become tests, agentic notes (files involved, traps) — the context a human would infer but an agent must read — and a complexity score (1-5, PRD scale): a 4 flags its risk, a 5 is split before planning.
 
 **/ks-architect** — analyzes the starting code (`codebase-analysis` skill): actual structure, conventions and patterns of the boilerplate. Fills the architecture doc and injects the concrete conventions into `AGENTS.md`. The boilerplate is imposed: conform to it, don't rewrite it.
 
@@ -136,3 +136,5 @@ The installer always targets the directory you run it from — your project's ro
 ## v0 status
 
 The structure is public, the valuable content is private. The `<< IP Mike >>` zones (boilerplate conventions, story granularity, anti-hallucination heuristics, severity thresholds) are intentionally empty in this version: they receive the proprietary content outside this repo.
+
+

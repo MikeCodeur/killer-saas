@@ -6,6 +6,9 @@
 ## Story <id> — <title>
 **As a** <user> **I want** <action> **so that** <benefit>.
 
+### Complexity
+<1-5, PRD scale. 4 → call out the risk in the agentic notes. 5 → split before planning.>
+
 ### Acceptance criteria
 - [ ] <verifiable criterion — must be able to become a test>
 - [ ] <verifiable criterion — must be able to become a test>

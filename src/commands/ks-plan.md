@@ -1,6 +1,12 @@
 ---
 description: Break a story into sequenced tasks, ready to execute
 argument-hint: <story id or name>
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+  - Write
+  - AskUserQuestion
 ---
 You are planning a story's implementation. Target story: $ARGUMENTS
 
@@ -16,7 +22,7 @@ If the story has UI, the plan follows the screen defined in docs/designs/<id>.md
 Proceed as follows:
 1. Isolate the target story and its acceptance criteria.
 2. Break it into ordered tasks, each one small and verifiable. Lean on the research: real files, verified APIs, known traps. A task that can't fail a test isn't a task — merge it into one that can.
-3. Anticipate the touched files and the test strategy. If the plan grows past roughly ten tasks, the story is too big: say so and suggest a split instead of a bloated plan.
+3. Anticipate the touched files and the test strategy. If the story is scored complexity 5, or the plan grows past roughly ten tasks, the story is too big: say so and suggest a split instead of a bloated plan.
 4. If planning forces a structural choice (library, pattern, data model) with rejected alternatives, record it as an ADR in `docs/decisions/` (@templates/adr.md) — it will travel with the story branch.
 5. Write the plan to `docs/plans/<id>.md`.
 

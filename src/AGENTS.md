@@ -8,7 +8,7 @@ PRD → User Stories → Architecture (+ Design System) → then, per story: Res
 No code is written before the story has a validated plan (`/ks-plan`). No feature ships before a passed review (`/ks-review`).
 
 ## Pipeline (commands)
-- `/ks-prd`        frames the product (WHAT + WHY)
+- `/ks-prd`        frames the kill: target SaaS, kill mode, perimeter (WHAT + WHY)
 - `/ks-stories`    breaks it down into shippable user stories
 - `/ks-architect`  sets the technical HOW + the conventions
 - `/ks-design-system`  captures the global design system (docs/design-system.md)
