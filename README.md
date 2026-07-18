@@ -29,6 +29,20 @@ Global (ks-* commands available in all your repos):
     # then, in each project:
     ~/.claude/killer-saas/install.sh init
 
+## Update
+
+From your project's root:
+
+    ~/tools/killer-saas/install.sh update
+    # or, without a clone:
+    curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash -s -- update
+
+What it does — and doesn't:
+- Cleanly replaces the method's commands, skills and agents (tracked in `.claude/.ks-manifest` — your own commands/skills are never touched, renamed or removed files leave no ghosts).
+- Refreshes the templates you haven't modified; a locally modified template is never overwritten (you get a warning instead).
+- Stamps the installed version in `.claude/.ks-version`.
+- Never touches `AGENTS.md`: if the method's rules evolved, merge by hand.
+
 ## Usage
 
     /ks-prd <idea>
