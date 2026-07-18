@@ -23,7 +23,8 @@ If you can't invoke the Agent tool, stop and report the error. Don't improvise.
 ### Step 1 — Prerequisites (fail-closed)
 1. Resolve $ARGUMENTS to the story id (`s<number>-<slug>`) against docs/stories.md. No unambiguous match → list the available stories, STOP.
 2. Read docs/plans/<id>.md. If it doesn't exist, STOP: ask for /ks-plan <id> first. Go no further.
-3. Read docs/reviews/<id>.md if it exists. If it contains `Ship allowed: no`, this is a FIX run: the review findings come first.
+3. Check the plan's frontmatter: it must contain `validated: yes`. Otherwise STOP: "Plan not validated. Review it, then rerun /ks-plan <id> to validate."
+4. Read docs/reviews/<id>.md if it exists. If it contains `Ship allowed: no`, this is a FIX run: the review findings come first.
 
 ### Step 2 — Delegate
 Invoke the Agent tool:

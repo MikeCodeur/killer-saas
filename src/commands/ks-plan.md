@@ -24,8 +24,11 @@ Proceed as follows:
 2. Break it into ordered tasks, each one small and verifiable. Lean on the research: real files, verified APIs, known traps. A task that can't fail a test isn't a task — merge it into one that can.
 3. Anticipate the touched files and the test strategy. If the story is scored complexity 5, or the plan grows past roughly ten tasks, the story is too big: say so and suggest a split instead of a bloated plan.
 4. If planning forces a structural choice (library, pattern, data model) with rejected alternatives, record it as an ADR in `docs/decisions/` (@templates/adr.md) — it will travel with the story branch.
-5. Write the plan to `docs/plans/<id>.md`.
+5. Write the plan to `docs/plans/<id>.md`, frontmatter `validated: no`.
+6. Validation checkpoint (AskUserQuestion): "Validate this plan?" — options: Validate / I'll review it first. On Validate, set `validated: yes` in the plan's frontmatter. /ks-execute refuses an unvalidated plan.
+
+If the plan file already exists when the command runs, skip straight to the validation checkpoint: show the summary and ask.
 
 Write no code. This command produces a plan, not code.
 
-End with: "Plan ready. Validate it, then: /ks-execute <id>"
+End with: "Plan validated. Next: /ks-execute <id>" — or "Plan awaiting validation. Rerun /ks-plan <id> to validate." if it wasn't validated.

@@ -1,3 +1,6 @@
+---
+validated: no
+---
 # Plan — Story <id>
 
 Branch: `feature/<id>`

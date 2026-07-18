@@ -50,7 +50,7 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 
 **/ks-plan** — breaks the story into ordered tasks, each one small and verifiable, based on the research. Anticipates touched files and the test strategy. Never produces code. The plan is validated by the user before execution.
 
-**/ks-execute** — delegates the implementation to the `implementer` subagent, which works on the story branch `feature/<id>` (strict TDD: failing test → minimal code → refactor, one commit per task). Fail-closed: no plan in `docs/plans/<id>.md`, no execution. The main context has neither Write, nor Edit, nor Bash — it can't code even if it "wanted" to. If a previous review blocked the story, it runs in **fix mode**: the review findings are fed to the implementer and fixed first.
+**/ks-execute** — delegates the implementation to the `implementer` subagent, which works on the story branch `feature/<id>` (strict TDD: failing test → minimal code → refactor, one commit per task). Fail-closed: no plan in `docs/plans/<id>.md` — or a plan without `validated: yes` — no execution. The main context has neither Write, nor Edit, nor Bash — it can't code even if it "wanted" to. If a previous review blocked the story, it runs in **fix mode**: the review findings are fed to the implementer and fixed first.
 
 **/ks-review** — delegates the review to the `reviewer` subagent: fresh context, read-only, opus model. The reviewer judges the story diff (`git diff <default-branch>...feature/<id>`), runs the test suite itself, and verifies every API/import in the diff actually exists. When the story has a design, it also checks conformity to the design system and to the screen's intent — off-system components or tokens are drift (major by default). Each issue classified critical / major / minor. The report ends with two machine-parsable lines: `Max severity: ...` and `Ship allowed: yes|no`.
 
@@ -58,7 +58,7 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 
 ### Utilities
 
-**/ks-orchestrator <story>** — runs the whole story cycle in one command. A conductor, not an autopilot: the two human checkpoints stay (the plan must be validated, the ship must be confirmed), code and review stay delegated to the same subagents, and the review gate loops back to fix mode at most twice before stopping. For when the cycle is routine, not for skipping the method.
+**/ks-orchestrator <story>** — the conductor. It chains one story's full cycle (Research → Design → Plan → Execute → Review → Ship) in a single command so you don't drive six commands by hand. What it does NOT do: replace the method. Each phase follows the exact contract of its standalone command, code and review stay delegated to the same subagents, and it stops on two blocking questions (real AskUserQuestion calls, not sentences): **validate the plan** — recorded as `validated: yes` in the plan's frontmatter, an existing file never counts as validated — and **confirm the ship**. The review gate loops back to fix mode at most twice, then stops with the open findings. Use it when the cycle is routine; use the individual commands when you want to inspect or steer a phase. It cannot validate a plan or ship in your place — and it is fail-closed on framing: no PRD, stories or architecture → it stops and points to the missing step instead of improvising.
 
 **/ks-help** — prints the pipeline map: the phases in order, the single rule, the per-story cycle. Written in French — it's the user-facing cheat sheet for the community. User-invoked only (`disable-model-invocation: true`).
 
@@ -111,6 +111,8 @@ The review returns a verdict written to `docs/reviews/<id>.md`, ending with the 
 
 - **Critical** → `Ship allowed: no` → ship blocked. Fix via `/ks-execute` (fix mode: the findings are fixed first), then a new `/ks-review`. No exceptions.
 - Major / minor → ship allowed, issues to address in a next cycle.
+
+Upstream, plan validation works the same way: the checkpoint is a blocking question whose answer is written into the plan file (`validated: yes`), and Execute — standalone or orchestrated — refuses to run without it. A plan file that merely exists is not a validated plan.
 
 ## Definition of Done (per feature)
 

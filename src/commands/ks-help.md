@@ -22,5 +22,11 @@ Règle unique : interdit de coder en direct. Chaque feature passe par le pipelin
 
 Bloqué en review sur un critique → retour /ks-execute (fix mode). Sinon → /ks-ship.
 
-Cycle complet d'une story en une commande (checkpoints humains conservés) : /ks-orchestrator <story>
+## Orchestrateur
+/ks-orchestrator <story> — enchaîne les 6 temps du cycle en une commande.
+Il ne remplace rien : mêmes contrats, mêmes subagents, mêmes gates que les
+commandes unitaires. Il s'arrête sur 2 questions bloquantes : valider le plan
+(écrit dans le fichier plan), confirmer le ship. Cycle routinier → orchestrateur ;
+besoin de piloter ou inspecter une phase → commandes unitaires.
+
 Où en est le projet (avancement par story, prochaine commande) : /ks-status
