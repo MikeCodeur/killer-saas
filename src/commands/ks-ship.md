@@ -12,7 +12,7 @@ Run: `grep -q '^Ship allowed: yes' docs/reviews/<id>.md`
 If the file is missing or the command fails, STOP immediately: "Ship blocked — review missing or negative. Run /ks-review <id>." Nothing below runs without a passing gate.
 
 Then proceed:
-1. Check out feature/<id> and verify the tests pass. Failing tests → stop.
+1. Check out feature/<id>; commit docs/reviews/<id>.md on it if not already committed (the PR must carry its review). Then verify the tests pass. Failing tests → stop.
 2. Push the branch and open a clean PR from feature/<id> to the default branch: clear title, structured description (what, why, how to test), readable diff.
 3. Merge.
 4. Trigger the deployment.

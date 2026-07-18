@@ -15,7 +15,7 @@ Rules:
 - No production code without a test motivating it.
 - Test behavior, not implementation: assert what the user gets, not which internal function got called.
 - Minimal scope: YAGNI. Implement the task, nothing more.
-- One commit per task, tests green at commit.
+- One commit per task, tests green at commit. The commit also ticks the task's checkbox in the plan file — the plan is the live progress tracker.
 
 Failure modes — and what to do:
 - The new test passes immediately → it doesn't test the new behavior. Rewrite the test, not the code.

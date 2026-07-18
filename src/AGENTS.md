@@ -34,6 +34,13 @@ One feature = one Research → Plan → Execute → Review → Ship cycle = one 
 - `/ks-ship` refuses to run unless that file exists and contains the line `Ship allowed: yes`. No file, no line, or `no` → ship blocked. No exceptions.
 - After a blocked review, `/ks-execute` runs in fix mode: the review findings are fed to the implementer and fixed before anything else.
 
+## Data & docs lifecycle
+All pipeline data lives in markdown files under docs/, versioned by git. No database, no state file: the pipeline state is derived from the files (a story is planned if docs/plans/<id>.md exists, shipped if its review says `Ship allowed: yes` and the branch is merged) — a derived state can't go stale.
+
+- Framing docs — docs/prd.md, docs/stories.md, docs/architecture.md: committed on the default branch at the end of their phase.
+- Story docs — docs/research/<id>.md, docs/plans/<id>.md, docs/reviews/<id>.md: committed on feature/<id>. The implementer's first commit brings the research and the plan; /ks-ship commits the review. Every PR carries its own research, plan and review.
+- Task progress — the checkboxes in docs/plans/<id>.md: the implementer ticks each task in the same atomic commit as the task's code. The plan file is the live progress tracker.
+
 ## Technical conventions
 << IP Mike: boilerplate structure, stack, patterns, naming, commit rules. >>
 
