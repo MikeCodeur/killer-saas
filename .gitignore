@@ -1,0 +1,7 @@
+# Local install for testing the method in this repo — source of truth is src/
+.claude/
+/templates/
+/AGENTS.md
+/CLAUDE.md
+
+.DS_Store
