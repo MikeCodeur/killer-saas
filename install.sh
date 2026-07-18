@@ -8,9 +8,9 @@ set -euo pipefail
 #   ./install.sh --global     Scope global : tooling dans ~/.claude, payload caché dans ~/.claude/killer-saas
 #   ./install.sh init         Pose templates + rules dans le projet courant (pour les installs globales)
 #
-# curl -fsSL https://raw.githubusercontent.com/<TON_USER>/killer-saas/main/install.sh | bash
+# curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash
 
-REPO="https://github.com/<TON_USER>/killer-saas.git"
+REPO="https://github.com/MikeCodeur/killer-saas.git"
 
 # --- Résolution du payload (src/) : fichiers locaux, sinon clone (cas curl|bash) ---
 SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"

@@ -22,7 +22,7 @@ Global (commands in all your repos):
 
 One-liner (read the script before running it):
 
-    curl -fsSL https://raw.githubusercontent.com/<TON_USER>/killer-saas/main/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash
 
 ## Usage
 
