@@ -35,3 +35,9 @@ One-liner (read the script before running it):
     /ks-execute <story>
     /ks-review <story>
     /ks-ship <story>
+
+    # or run a story's full cycle (with human checkpoints):
+    /ks-orchestrator <story>
+
+    # lost? pipeline map (français) :
+    /ks-help

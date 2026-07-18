@@ -17,6 +17,10 @@ No code is written before the story has a validated plan (`/ks-plan`). No featur
 - `/ks-review`     anti-hallucination review + gate (reviewer subagent)
 - `/ks-ship`       PR, merge, deploy
 
+Utilities:
+- `/ks-orchestrator`  runs a story's full cycle with human checkpoints (plan validation, ship confirmation)
+- `/ks-help`          prints the pipeline map (French, user-facing cheat sheet)
+
 One feature = one Research → Plan → Execute → Review → Ship cycle = one branch = one PR.
 
 ## Story ids and branches

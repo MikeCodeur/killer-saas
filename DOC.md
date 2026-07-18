@@ -50,6 +50,12 @@ Three framing steps, once per product. Then one cycle per story — one story = 
 
 **/ks-ship** — starts with the mechanical gate: `grep '^Ship allowed: yes' docs/reviews/<id>.md` — no file or a `no` verdict stops everything. Then verifies tests on the branch, pushes, opens a clean PR, merges, deploys, confirms it's live.
 
+### Utilities
+
+**/ks-orchestrator <story>** — runs the whole story cycle in one command. A conductor, not an autopilot: the two human checkpoints stay (the plan must be validated, the ship must be confirmed), code and review stay delegated to the same subagents, and the review gate loops back to fix mode at most twice before stopping. For when the cycle is routine, not for skipping the method.
+
+**/ks-help** — prints the pipeline map: the phases in order, the single rule, the per-story cycle. Written in French — it's the user-facing cheat sheet for the community. User-invoked only (`disable-model-invocation: true`).
+
 ## Tooling anatomy
 
 Five building blocks:
