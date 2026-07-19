@@ -45,6 +45,6 @@ Delegate to the `reviewer` subagent exactly as /ks-review does: fresh context, s
 Gate: verdict `Ship allowed: no` → go back to Phase 4 in fix mode. Maximum 2 fix loops; still blocked after that → stop and report the open findings. Never soften a verdict to move on.
 
 ## Phase 6 — Ship
-CHECKPOINT — review passed: show the verdict and ask via AskUserQuestion: "Ship now?" — options: Ship / Not now. Only an explicit Ship proceeds; then run /ks-ship's flow: mechanical gate (`grep -q '^Ship allowed: yes' docs/reviews/<id>.md`), tests on the branch, push, PR — then the project's ship strategy (manual, the default: stop at the PR; auto: merge, deploy, confirm live).
+CHECKPOINT — review passed: show the verdict and ask via AskUserQuestion: "Ship now?" — options: Ship / Not now. Only an explicit Ship proceeds; then run /ks-ship's flow: mechanical gate (`grep -q '^Ship allowed: yes' docs/reviews/<id>.md`), tests on the branch, push, PR — then the project's ship strategy (manual, the default: stop at the PR; auto: merge, deploy, confirm live, clean up the branch once the merge is proven).
 
 End with: "Story <id> shipped. Cycle complete." (auto mode), "PR opened — merging is yours." (manual mode) — or the exact blocking state if stopped (which phase, what's missing).
