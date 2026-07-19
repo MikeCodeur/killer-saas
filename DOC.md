@@ -30,7 +30,7 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 | Plan | `/ks-plan <story>` | Sequenced, small, verifiable tasks | `docs/plans/<story>.md` |
 | Execute | `/ks-execute <story>` | TDD implementation by the `implementer` subagent | code + tests + commits |
 | Review | `/ks-review <story>` | Anti-hallucination review by the `reviewer` subagent | `docs/reviews/<story>.md` |
-| Ship | `/ks-ship <story>` | PR, merge, deploy | feature in production |
+| Ship | `/ks-ship <story>` | PR; merge + deploy per ship strategy (manual by default) | PR opened / feature in production |
 
 ### Framing (once per product)
 
@@ -54,7 +54,7 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 
 **/ks-review** — delegates the review to the `reviewer` subagent: fresh context, read-only, opus model. The reviewer judges the story diff (`git diff <default-branch>...feature/<id>`), runs the test suite itself, and verifies every API/import in the diff actually exists. When the story has a design, it also checks conformity to the design system and to the screen's intent — off-system components or tokens are drift (major by default). Each issue classified critical / major / minor. The report ends with two machine-parsable lines: `Max severity: ...` and `Ship allowed: yes|no`.
 
-**/ks-ship** — starts with the mechanical gate: `grep '^Ship allowed: yes' docs/reviews/<id>.md` — no file or a `no` verdict stops everything. Then verifies tests on the branch, pushes, opens a clean PR, merges, deploys, confirms it's live.
+**/ks-ship** — starts with the mechanical gate: `grep '^Ship allowed: yes' docs/reviews/<id>.md` — no file or a `no` verdict stops everything. Then verifies tests on the branch, pushes, opens a clean PR with the review verdict in its body — and follows the project's **ship strategy** (AGENTS.md): `manual`, the default, stops there — merging stays a human decision; `auto` merges, deploys and confirms it's live.
 
 ### Utilities
 

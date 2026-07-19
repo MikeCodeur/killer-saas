@@ -17,7 +17,7 @@ No code is written before the story has a validated plan (`/ks-plan`). No featur
 - `/ks-plan`       breaks a story into sequenced tasks
 - `/ks-execute`    implements the story in TDD (implementer subagent)
 - `/ks-review`     anti-hallucination review + gate (reviewer subagent)
-- `/ks-ship`       PR, merge, deploy
+- `/ks-ship`       opens the PR; merge/deploy per the ship strategy (manual by default)
 
 Utilities:
 - `/ks-orchestrator`  runs a story's full cycle with human checkpoints (plan validation, ship confirmation)
@@ -37,6 +37,11 @@ One feature = one Research → Design → Plan → Execute → Review → Ship c
 - `/ks-ship` refuses to run unless that file exists and contains the line `Ship allowed: yes`. No file, no line, or `no` → ship blocked. No exceptions.
 - After a blocked review, `/ks-execute` runs in fix mode: the review findings are fed to the implementer and fixed before anything else.
 - A plan executes only if its frontmatter says `validated: yes` — set by the human validation checkpoint (/ks-plan or the orchestrator), never by the file merely existing. /ks-execute is fail-closed on it.
+
+## Ship strategy
+Merge mode: manual   (manual | auto — default: manual)
+- manual: /ks-ship opens the PR and stops. Merging is a human decision (review on GitHub, protected branch, CI).
+- auto: /ks-ship merges and deploys immediately after the gate. Only for solo flows where running /ks-ship IS the decision.
 
 ## Design
 The global design system lives in `docs/design-system.md` (components + tokens, anchored to the boilerplate). Each story's design lives in `docs/designs/<id>.md` (+ a reference `.html` mockup).

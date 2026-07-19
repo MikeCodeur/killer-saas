@@ -18,7 +18,7 @@ Règle unique : interdit de coder en direct. Chaque feature passe par le pipelin
 7. /ks-plan <story>     — éclate la story en tâches
 8. /ks-execute <story>  — code en TDD (subagent isolé)
 9. /ks-review <story>   — review anti-hallucination + gate
-10. /ks-ship <story>    — PR, merge, deploy
+10. /ks-ship <story>    — ouvre la PR ; merge manuel par défaut (cf. AGENTS.md)
 
 Bloqué en review sur un critique → retour /ks-execute (fix mode). Sinon → /ks-ship.
 
