@@ -16,7 +16,7 @@ REPO="https://github.com/MikeCodeur/killer-saas.git"
 
 # --- Résolution du payload (src/) : fichiers locaux, sinon clone (cas curl|bash) ---
 SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || true)"
-if [ -n "${SELF_DIR:-}" ] && [ -d "$SELF_DIR/src" ]; then
+if [ -n "${SELF_DIR:-}" ] && [ -f "$SELF_DIR/src/commands/ks-prd.md" ]; then
   SRC="$SELF_DIR/src"
   PAYLOAD_ROOT="$SELF_DIR"
 else
