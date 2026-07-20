@@ -62,7 +62,7 @@ Four framing steps, once per product. Then one cycle per story — one story = o
 
 **/ks-help** — prints the pipeline map: the phases in order, the single rule, the per-story cycle. Written in French — it's the user-facing cheat sheet for the community. User-invoked only (`disable-model-invocation: true`).
 
-**/ks-status** — derives the project's state from the files: framing docs present, per-story research/plan/review, checkbox progress (x/y tasks), merged branches — then prints the next useful command. Nothing is stored: the files are the state.
+**/ks-status** — derives the project's state from the files: framing docs, and per story — complexity, research, design, plan (draft or validated), checkbox progress (x/y), review verdict, PR/merge state, dependency blocks — then prints the next useful command per story and for the project. Nothing is stored: the files are the state.
 
 ## Data & storage
 
