@@ -75,3 +75,13 @@ What it does — and doesn't:
 
     # lost? pipeline map (français) :
     /ks-help
+
+## Autonomous mode — `/goal`
+
+`/goal` is a native Claude Code command (not a killer-saas one): you state an outcome, it figures out how to reach it — planning the work, spawning parallel agents, and finding the best sequence itself. Point it at the killer-saas commands and it drives the whole backlog for you.
+
+    /goal All user stories planned, reviewed and executed.
+    Start a dynamic workflow with multiple parallel agents to implement
+    the user stories (find the best sequence).
+
+It reads `docs/stories.md`, respects the dependency order, and fans out `/ks-research → … → /ks-review` across independent stories in parallel — while the method's gates still hold: no execution without a validated plan, no ship past an open critical. Use it to go wide once the framing (PRD, stories, architecture, design system) is done; use the individual `/ks-*` commands when you want to drive one story by hand.
