@@ -6,7 +6,15 @@ One method = a suite of commands. One principle = no direct coding.
 ## Pipeline
 PRD → User Stories → Architecture + Design System → then, per story: Research → Design → Plan → Execute → Review → Ship
 
+![killer-saas pipeline overview](docs/images/pipeline-overview-dark.png)
+
 Full method documentation: [DOC.md](DOC.md)
+
+### Framing — once per product
+![Framing phase](docs/images/framing-dark.png)
+
+### Per story — the cycle
+![Per-story cycle](docs/images/story-cycle-dark.png)
 
 ## Install
 
