@@ -1,5 +1,8 @@
 # Local install for testing the method in this repo — source of truth is src/
 .claude/
+.codex/
+.killer-saas/
+.ks-hooks/
 /templates/
 /AGENTS.md
 /CLAUDE.md

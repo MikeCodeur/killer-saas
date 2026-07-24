@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# killer-saas — installed via core.hooksPath. Blocks code commits without a validated plan.
+set -euo pipefail
+exec "$(dirname "$0")/ks-gate.sh" pre-commit

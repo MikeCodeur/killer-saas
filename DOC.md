@@ -135,6 +135,32 @@ The installer always targets the directory you run it from — your project's ro
 
 `CLAUDE.md` is not shipped: the installer creates it (or appends to it) with `@AGENTS.md`, so Claude Code loads the rules.
 
+## Multi-tool support (Claude Code / Codex / Gemini)
+
+One canonical source (`src/`, Claude-shaped, the richest target), one installer, per-tool emission — no forked copies. `./install.sh --target claude|codex|all`, project or global scope, drives a per-tool adapter; the Codex transform runs through a zero-dependency Node build (`bin/ks-build.mjs`). What ports and what degrades:
+
+| Building block | Claude Code | Codex | Gemini CLI (planned) |
+| --- | --- | --- | --- |
+| Rules (`AGENTS.md`) | native (+`CLAUDE.md` import) | **native** | `GEMINI.md` shim importing it |
+| Skills (`SKILL.md`) | native | **native** (same open standard) | inlined (no skills mechanism) |
+| Templates | copied | copied | copied |
+| Commands (`ks-*`) | `.claude/commands/*.md` | emitted as `.codex/skills/*` | `.gemini/commands/*.toml` |
+| File/grep gates (`validated:`, `Ship allowed:`) | ✅ | ✅ | ✅ |
+| "No direct coding" via tool permissions | ✅ mechanical | ~ agent sandbox (coarser) | ✗ prose-only |
+| Subagent model routing (sonnet/opus) | ✅ | note only | note only |
+| `AskUserQuestion` checkpoints | ✅ structured | prose | prose |
+
+**The honest line:** the file-based gates (a story needs a `validated: yes` plan before code, a `Ship allowed: yes` review before merge) port to every tool because they are shell-on-markdown, not tool permissions. The permission/isolation guarantees are Claude-mechanical and degrade elsewhere. Rather than pretend otherwise, killer-saas moves enforcement into the **repo**:
+
+### Repo-level enforcement (`--hooks`)
+
+Opt-in git hooks (installed via `core.hooksPath`, reversible) enforce the gates in git, identically for every tool:
+
+- **pre-commit** — no code on `feature/<id>` without `docs/plans/<id>.md` → `validated: yes` (docs-only commits pass).
+- **pre-push** — no default-branch push when a merged story lacks `docs/reviews/<id>.md` → `Ship allowed: yes`.
+
+So "no code without a validated plan" and "no ship without a passed review" hold on Claude, Codex and Gemini alike — enforcement lives in the repo, not the harness. For PR merges on the platform, the same `ks-gate ship-allowed <id>` check belongs in CI / branch protection.
+
 ## v0 status
 
 The structure is public, the valuable content is private. The `<< IP Mike >>` zones (boilerplate conventions, story granularity, anti-hallucination heuristics, severity thresholds) are intentionally empty in this version: they receive the proprietary content outside this repo.

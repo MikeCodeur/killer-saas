@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# killer-saas — installed via core.hooksPath. Blocks pushing the default branch when a
+# merged story has no passed review. Reads <local ref> <local sha> <remote ref> <remote sha> on stdin.
+set -euo pipefail
+exec "$(dirname "$0")/ks-gate.sh" pre-push

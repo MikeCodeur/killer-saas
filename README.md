@@ -31,26 +31,50 @@ Prefer to read before you run? Clone the repo somewhere, then run the script fro
     cd your-project
     ~/tools/killer-saas/install.sh
 
-Global (ks-* commands available in all your repos):
+### Targets and scopes
 
-    ~/tools/killer-saas/install.sh --global
-    # then, in each project:
-    ~/.claude/killer-saas/install.sh init
+One source of truth, one installer, per-tool output. Pick a **target** with `--target`, in **project** (default) or **global** (`--global`) scope:
+
+    ./install.sh                           # Claude Code, project (default)
+    ./install.sh --target codex            # Codex, project → .codex/skills + AGENTS.md
+    ./install.sh --target all              # Claude + Codex, project
+    ./install.sh --global                  # Claude, global (commands in every repo)
+    ./install.sh --global --target codex   # Codex, global → ~/.codex/skills
+    ./install.sh --global --target all     # both, global
+
+After a global install, drop the per-project files (templates + rules) in each project:
+
+    ~/.claude/killer-saas/install.sh init                 # Claude
+    ~/.claude/killer-saas/install.sh init --target codex  # Codex
+
+`AGENTS.md` (the rules) is shared and read natively by both tools; on Claude a one-line `CLAUDE.md` imports it. The 4 skills are the open `SKILL.md` standard, so they carry over unchanged; the 13 `ks-*` commands are emitted as Codex skills. Gemini CLI is planned next — see the fidelity matrix in [DOC.md](DOC.md).
+
+### Repo-level enforcement (git hooks)
+
+The method's guardrails don't have to depend on a specific tool's permissions. Opt in with `--hooks` to enforce them in **git**, identically for every tool:
+
+    ./install.sh --hooks        # (add to any target)
+
+- **pre-commit** — refuses code on a `feature/<id>` branch without a validated plan (`docs/plans/<id>.md` → `validated: yes`). Docs-only commits always pass.
+- **pre-push** — refuses pushing the default branch when a merged story lacks a passed review (`docs/reviews/<id>.md` → `Ship allowed: yes`).
+
+Reversible: `git config --unset core.hooksPath`. On Claude the harness also enforces "no direct coding" via tool permissions; the hooks make the same guarantees hold on Codex (and, later, Gemini) — enforcement lives in the repo, not the tool.
 
 ## Update
 
 From your project's root:
 
-    ~/tools/killer-saas/install.sh update
+    ~/tools/killer-saas/install.sh update              # Claude
+    ~/tools/killer-saas/install.sh update --target codex   # Codex
     # or, without a clone:
     curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash -s -- update
     # overwrite locally modified templates too:
     curl -fsSL https://raw.githubusercontent.com/MikeCodeur/killer-saas/main/install.sh | bash -s -- update --force
 
 What it does — and doesn't:
-- Cleanly replaces the method's commands, skills and agents (tracked in `.claude/.ks-manifest` — your own commands/skills are never touched, renamed or removed files leave no ghosts).
-- Refreshes the templates you haven't modified; a locally modified template is never overwritten (you get a warning instead).
-- Stamps the installed version in `.claude/.ks-version`.
+- Cleanly replaces the method's tooling, tracked per target in `.ks-manifest` (`.claude/` or `.codex/` — your own commands/skills are never touched, renamed or removed files leave no ghosts).
+- Refreshes the templates you haven't modified; a locally modified template is never overwritten (you get a warning instead — add `--force` to overwrite).
+- Stamps the installed version in `.ks-version`.
 - Never touches `AGENTS.md`: if the method's rules evolved, merge by hand.
 
 ## Usage
@@ -75,6 +99,8 @@ What it does — and doesn't:
 
     # lost? pipeline map (français) :
     /ks-help
+
+On **Codex**, the same steps run as skills (e.g. `ks-prd`, `ks-execute`) — same order, same gates. The git hooks (`--hooks`) enforce the pipeline the same way on both tools.
 
 ## Autonomous mode — `/goal`
 
