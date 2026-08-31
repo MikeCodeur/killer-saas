@@ -63,6 +63,12 @@ Utilities:
 - `/ks-help`          prints the pipeline map (French, user-facing cheat sheet)
 - `/ks-status`        derives the project's pipeline state from the files (framing, per-story progress, next command)
 
+**Run the commands. Never hand-roll the agent call.** `/ks-execute <id>` and `/ks-review <id>`
+carry what the pipeline has learned — the fix mode that spawns a fresh implementer, the subagent
+definitions, the gate. A briefing written by hand replaces all of it with an opinion, and the agent
+definitions it restates are denser and more current than any prompt. Parallel stories are several
+commands, never several hand-written prompts.
+
 One feature = one Research → Design → Plan → Execute → Review → Ship cycle = one branch = one PR (Design only when the story has UI).
 
 ## Where work happens
@@ -89,6 +95,18 @@ with `git switch`, `git checkout`, `git stash` or an `-isolated` suffix.
 One agent, one working directory. While an agent owns a directory, no second
 agent and no main context may edit, checkout or stash in it.
 
+## What is a story, and what is not
+
+`docs/stories.md` holds the **product perimeter** — the breakdown `/ks-stories` produced and
+`/ks-stories-review` validated against the PRD. A story is a new capability.
+
+**A defect is not a story.** A bug, a stale assertion, a screen that renders wrong, a footgun — it
+goes to the issue tracker, never into `docs/stories.md`. Putting it there inflates the perimeter
+with work nobody scoped, and `/ks-status` then counts it as product left to build.
+
+**A review finding stays in its review report** unless a human decides otherwise. It is already
+traced there, with its `file:line` and how it was found.
+
 ## Story ids and branches
 - Every story has an id: `s<number>-<short-slug>` (e.g. `s01-submit-testimonial`). It is assigned in docs/stories.md and reused verbatim everywhere: `docs/research/<id>.md`, `docs/plans/<id>.md`, `docs/reviews/<id>.md`, branch `feature/<id>`.
 - All work on a story happens on `feature/<id>`, branched from the default branch. Never commit story work to the default branch.
@@ -107,11 +125,29 @@ Merge mode: manual   (manual | auto — default: manual)
 - auto: /ks-ship merges and deploys immediately after the gate. Only for solo flows where running /ks-ship IS the decision.
 
 ## Design
+
+Design source: <unset>   (external | internal — fixed once per project, see /ks-design-system)
+
+- `internal`: the agent produces the mockup, directly or through a design skill.
+- `external`: the agent writes a brief, an external tool produces the screens, and the mockup is
+  dropped back into `docs/designs/<id>/`. Dropping it **is** the validation.
+
 The global design system lives in `docs/design-system.md` (components + tokens, anchored to the boilerplate). Each story's design lives in its own folder, `docs/designs/<id>/` — `design.md`, `mockup.html`, `brief.md` when an external tool produced it, and any extra frames beside them.
 - A story's design can be produced by the agent itself, by an internal design skill, or by an external tool that holds the design system and whose result is brought back. Either way it builds on the design system, and the pipeline prescribes neither the tool nor the skill.
 - **The repository is authoritative.** An external design tool — including one an agent can write to — is a working surface, never the source of truth. Anything reworked there is brought back into `docs/designs/<id>/` before implementation, or the code and the design diverge unnoticed.
-- A mockup is never handed over unrendered: it is opened in a browser and checked in both themes, at both widths. **Look for what is BROKEN, not for what is imperfect** — horizontal overflow, unreadable text, a control that disappeared, a state that is missing, a layout that collapses. Do not measure shadows, radii or every text node's contrast: the tokens already hold those decisions, and re-verifying them on each story re-litigates the design system instead of using it. "Could not verify" is an acceptable report; skipping in silence is not.
-- **A twin screen gets no mockup.** When the screen composes one that already ships, `design.md` names the reference screen and lists the deltas — the fields that differ, the states that are new, the affordances that disappear. Rebuilding a mockup of an anatomy already in code costs a quarter of an hour and verifies nothing the rendered code will not verify better; the render check then moves to `/ks-execute`, which opens the real screen. Build the mockup when the story introduces a shape the product does not have yet.
+- A mockup is never handed over unrendered: it is opened in a browser, checked in both themes and
+  at both widths, and **its contrasts are measured** — a pair at 4.2:1 and one at 4.8:1 look
+  identical, and an external tool has no guarantee of having honoured the real tokens. "Could not
+  verify" is an acceptable report; skipping in silence is not.
+- **That measurement belongs to the mockup, and stops there.** Implementation and review do not
+  redo it: the tokens carry those decisions, the mockup already validated them, and re-measuring
+  each story re-litigates the design system instead of using it. Downstream, look for what is
+  BROKEN — horizontal overflow, unreadable text, a control that disappeared, a missing state, a
+  layout that collapses.
+- **Every UI story produces its `mockup.html`, and the phase ends only when it exists.** Even when
+  the screen composes one that already ships, `design.md` lists the deltas **and** the mockup shows
+  them: it is the only artifact that exists before the code, and the one thing someone can look at
+  in thirty seconds. Validating a mockup costs minutes; correcting a shipped screen costs a story.
 - Inventing a component or token outside the design system is forbidden. Compose with what exists.
 - The HTML mockup is a reference, not code: the implementation uses the boilerplate's real components.
 - A need the system doesn't cover = a "design system gap" to report, never to fill freestyle.

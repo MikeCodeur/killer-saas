@@ -33,14 +33,25 @@ You are FORBIDDEN from:
 - Missing or empty → STOP: "No design system found in docs/design-system.md. Set it up first via /ks-design-system, then rerun /ks-design." Produce NO design.
 - Present → load it. Its tokens and components are the only visual source, whichever path is taken. Read the real values from the code as well (the stylesheet that defines the tokens): the document describes intent, the stylesheet holds the numbers, and the numbers win.
 
-### Step 2 — Resolve the path (never block autonomy)
-Two paths, and the mode is **resolved**, not asked, whenever it can be:
-- `--agent`, or the story is running autonomously → **autonomous path**.
-- `--brief [tool name]` → **brief path**, for the named tool.
-- Neither, and a human is in the loop → ask once (AskUserQuestion): who produces this design, the agent or an external tool?
-- Neither, and nobody can answer this turn → **autonomous path**, and say so at handover.
+### Step 2 — Read the project's design source (fail-closed)
+The path is **fixed once per project**, not decided per story. Read `Design source:` from
+`AGENTS.md`:
 
-The external tool is deliberately unnamed in this command. Any tool that holds the design system qualifies. The same is true on the autonomous path: the agent may generate directly or through an internal design skill. Neither the tool nor the skill is prescribed here — only the deliverable and the verification are.
+- `internal` → the agent produces the mockup itself, directly or through a design skill.
+- `external` → the agent writes the brief and an external tool produces the screens.
+
+**If the setting is absent**, ask once (AskUserQuestion) which of the two this project uses, and
+**write the answer into `AGENTS.md`** — it is a project decision, not a per-story one, and asking
+it again every story is how a project ends up with half its designs made one way.
+
+**If it is absent and nobody can answer this turn, stop.** Return the question to the caller. Do
+not pick a default: a project silently set to one path produces designs its owner never chose. The
+usual place this gets answered is `/ks-design-system`, which runs once — after that every story
+finds it set.
+
+Neither the external tool nor the internal skill is prescribed here. Any tool that holds the design
+system qualifies; a project may point at a hosted design tool, an MCP, or an internal skill such as
+`frontend-design` or `impeccable`. Only the deliverable and the verification are fixed.
 
 ### Step 3 — Read the inputs
 Read `docs/stories.md` and isolate the target story's acceptance criteria.
@@ -58,19 +69,19 @@ Low fidelity is for the rare case where a screen's structure is genuinely open a
 - `docs/designs/<id>/design.md` (structure: @templates/design-screen.md)
 - `docs/designs/<id>/mockup.html` — the screen, using exclusively the design system's tokens and components. Extra frames live beside it under the same folder.
 
-**A twin screen gets no mockup.** When the screen composes one that already ships — a list
-with a form panel, a permission-governed table, a row-action menu — `design.md` names the
-reference screen and lists the deltas: the fields that differ, the states that are new, the
-affordances that disappear. Rebuilding a mockup of an anatomy already in code costs a
-quarter of an hour and verifies nothing the rendered code will not verify better; on that
-path the render check moves to `/ks-execute`, which opens the real screen. Build the mockup
-when the story introduces a shape the product does not have yet, and say which of the two
-cases you are in at the top of `design.md`.
+**The mockup is always produced.** Even when the screen composes one that already ships, it is
+drawn: `design.md` names the reference screen and lists the deltas, **and** the mockup shows them.
+That is what someone can look at in thirty seconds, and it is the only artifact that exists before
+the code does. A phase that ends without one has not run.
 
 **BRIEF path** — the agent writes the brief, the external tool produces the screens:
 1. `docs/designs/<id>/brief.md` (structure: @templates/design-brief.md): every screen with its layout, exact fields and actions, every state, and the design-system constraints **copied in** so the brief is self-contained and pasteable. Out-of-scope stated. **This file is the deliverable of this step — not a chat message.** A file survives the session and can be picked up by a different agent or a different tool.
 2. The result comes back (exported HTML, screenshot or description). Record it as `docs/designs/<id>/mockup.html` and write `docs/designs/<id>/design.md` describing the screen and pointing at it.
-3. Nothing came back → end with: "Brief ready in docs/designs/<id>/brief.md — take it to your design tool, then rerun /ks-design <id> with the result." Do not generate in its place unless explicitly switched to the autonomous path.
+3. Nothing came back → **the phase is not finished.** Stop and wait: "Brief ready in
+   docs/designs/<id>/brief.md — take it to your design tool and drop the result as
+   docs/designs/<id>/mockup.html, then rerun /ks-design <id>." Do not generate in its place, and do
+   not hand over to `/ks-plan`. On this path, **dropping the mockup is the validation** — there is
+   nothing else to approve.
 
 ### Step 5 — Render it and look at it (both paths, no exception)
 A mockup that has never been displayed has not been verified — reading the markup is not looking at the screen. This step **sends you back**: what it finds gets fixed before handover, it is not a checkbox at the end.
@@ -81,7 +92,10 @@ Four checks:
 - **Open it in a browser.** Serve it over local HTTP; a `file://` URL may be refused by the browser tooling.
 - **Both themes.** Most rendering regressions are visible in only one of the two.
 - **Both widths**, desktop and mobile, with no horizontal overflow.
-- **Contrast measured**, not judged by eye, on every text/surface pair.
+- **Contrast measured**, not judged by eye, on every text/surface pair. A pair at 4.2:1 and a pair
+  at 4.8:1 look identical; only one passes. This is a condition for producing a good mockup — and
+  it is the one check an external tool cannot be trusted on, since nothing guarantees it honoured
+  the real tokens.
 
 Then report what was checked **and what could not be checked**. No browser available is an acceptable outcome; skipping the step in silence is not — an explicit "not verified" is actionable, an omission is not.
 
@@ -99,5 +113,9 @@ Everything lands in the repository, under `docs/designs/<id>/`, and travels with
 
 ## Mockup status (hard rule)
 `mockup.html` is a **reference, not code to copy**. In Execute the screen is built with the boilerplate's real components. The mockup communicates intent — layout, states, hierarchy; it never replaces the component system and never gets pasted into production.
+
+**The phase ends when `docs/designs/<id>/mockup.html` exists, and not before.** On the internal
+path the agent validates it visually — rendered, both themes, both widths. On the external path,
+the mockup being dropped in the folder is the validation.
 
 End with: "Design ready (docs/designs/<id>/design.md + mockup.html), rendered and checked. Next step: /ks-plan <id>"
