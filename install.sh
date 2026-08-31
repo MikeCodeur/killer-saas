@@ -12,6 +12,7 @@ set -euo pipefail
 #   ./install.sh --global --target all      Global Claude + Codex
 #   ./install.sh init [--target …]     Pose templates + rules dans le projet (après un global)
 #   ./install.sh update [--target …]   Met à jour le tooling + templates (préserve tes modifs)
+#   ./install.sh --check               Liste les fichiers installés modifiés localement (rien n'est écrit)
 #   --hooks                            Pose les git hooks d'enforcement (opt-in, réversible)
 #   --force                            Écrase aussi les templates modifiés localement
 #
@@ -44,6 +45,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     -f|--force)   FORCE=1 ;;
     --hooks)      HOOKS=1 ;;
+    --check)      MODE="check" ;;
     --target)     TARGET="${2:-}"; shift ;;
     --target=*)   TARGET="${1#--target=}" ;;
     *)            MODE="$1" ;;
@@ -113,13 +115,32 @@ sync_templates() {
   done
 }
 
-# AGENTS.md est la source de règles partagée (native pour Codex, importée par CLAUDE.md pour Claude).
-drop_agents_md() {
+# Le dépôt killer-saas lui-même n'est pas un projet : son AGENTS.md racine porte les règles de
+# maintenance de la méthode, pas celles du pipeline. Ne jamais l'écraser en s'auto-installant.
+is_method_repo() { [ -f ./src/commands/ks-prd.md ] && [ -f ./install.sh ]; }
+
+# AGENTS.local.md appartient au projet : posé une fois s'il est absent, jamais réécrit.
+seed_agents_local() {
   local payload="$1"
-  if [ -f ./AGENTS.md ]; then
-    echo "⚠  ./AGENTS.md existe déjà — non écrasé. Fusionne les rules killer-saas à la main si besoin."
-  else
-    cp "$payload/AGENTS.md" ./AGENTS.md
+  is_method_repo && return 0
+  [ -f ./AGENTS.local.md ] && return 0
+  cp "$payload/templates/agents-local.md" ./AGENTS.local.md
+  echo "→ ./AGENTS.local.md créé (réglages par défaut). Ajuste-le, ou lance /ks-setup."
+}
+
+# AGENTS.md appartient à la méthode : réécrit à chaque install, avec AGENTS.local.md concaténé.
+# Concaténation et pas import : Codex ne résout pas `@fichier` (openai/codex#17401), il empile
+# un AGENTS.md par répertoire. Un seul mécanisme pour les deux cibles.
+assemble_agents_md() {
+  local payload="$1"
+  if is_method_repo; then
+    echo "· dépôt méthode : AGENTS.md racine laissé intact (règles de maintenance, pas d'install)."
+    return 0
+  fi
+  cat "$payload/AGENTS.md" > ./AGENTS.md
+  if [ -f ./AGENTS.local.md ]; then
+    printf '\n---\n\n' >> ./AGENTS.md
+    cat ./AGENTS.local.md >> ./AGENTS.md
   fi
 }
 wire_claude_md() {
@@ -143,15 +164,41 @@ install_hooks() {
   echo "   Désactiver : git config --unset core.hooksPath"
 }
 
+# --check : compare l'installé au payload, via .ks-manifest. N'écrit rien.
+# Une commande éditée localement est perdue au prochain install — autant le savoir avant.
+check_drift() {
+  local dest="$1" payload="$2" label="$3" line drifted=0 src_path
+  [ -d "$dest" ] || return 0
+  if [ ! -f "$dest/.ks-manifest" ]; then
+    echo "· $label : pas de manifeste (installé par une version antérieure)."; return 0
+  fi
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    src_path="$payload/$line"
+    if [ ! -e "$src_path" ]; then
+      echo "  + $line — n'existe plus dans la méthode (retiré au prochain install)"; drifted=1
+    elif [ ! -e "$dest/$line" ]; then
+      echo "  ✗ $line — supprimé localement"; drifted=1
+    elif ! diff -rq "$src_path" "$dest/$line" >/dev/null 2>&1; then
+      echo "  ✎ $line — modifié localement (sera écrasé au prochain install)"; drifted=1
+    fi
+  done < "$dest/.ks-manifest"
+  if [ "$drifted" = 0 ]; then
+    echo "✅ $label : conforme à la méthode."
+  else
+    echo "⚠  $label : remonte ces changements dans src/ de killer-saas, ou tu les perdras."
+  fi
+}
+
 install_target() {
   case "$1" in
     claude)
       copy_tooling_claude "./.claude"
-      sync_templates "$SRC"; drop_agents_md "$SRC"; wire_claude_md
+      sync_templates "$SRC"; seed_agents_local "$SRC"; assemble_agents_md "$SRC"; wire_claude_md
       echo "✅ killer-saas installé (Claude, projet, version $VERSION). Commandes : /ks-prd … /ks-ship" ;;
     codex)
       copy_tooling_codex "./.codex"
-      sync_templates "$SRC"; drop_agents_md "$SRC"   # AGENTS.md natif Codex, pas de CLAUDE.md
+      sync_templates "$SRC"; seed_agents_local "$SRC"; assemble_agents_md "$SRC"   # AGENTS.md natif Codex, pas de CLAUDE.md
       echo "✅ killer-saas installé (Codex, projet, version $VERSION). Skills : ks-prd … ks-ship dans .codex/skills." ;;
     all)
       install_target claude
@@ -192,8 +239,10 @@ case "$MODE" in
     ;;
 
   init)
+    # Après un --global : pose les fichiers PROJET (templates + rules), sans retoucher au tooling
+    # déjà installé globalement. C'est la seule différence avec le mode projet.
     local_src="$SRC"; [ -d "$local_src/templates" ] || local_src="$CACHE"
-    sync_templates "$local_src"; drop_agents_md "$local_src"
+    sync_templates "$local_src"; seed_agents_local "$local_src"; assemble_agents_md "$local_src"
     case "$TARGET" in claude|all) wire_claude_md ;; esac   # CLAUDE.md seulement si Claude est cible
     echo "✅ templates + rules ajoutés à $(pwd) (cible $TARGET)"
     if [ "$HOOKS" = 1 ]; then install_hooks; fi
@@ -203,6 +252,22 @@ case "$MODE" in
     install_target "$TARGET"
     echo "✅ killer-saas mis à jour ($TARGET, version $VERSION). AGENTS.md jamais touché — fusionne à la main si les rules ont évolué."
     if [ "$HOOKS" = 1 ]; then install_hooks; fi
+    ;;
+
+  check)
+    check_drift "./.claude" "$SRC" "Claude (.claude)"
+    # Codex : l'installé est transformé au build, donc incomparable au payload brut.
+    # On régénère la sortie attendue et on compare à ça.
+    if [ -d ./.codex ]; then
+      if command -v node >/dev/null 2>&1 && [ -f "$PAYLOAD_ROOT/bin/ks-build.mjs" ]; then
+        stg="$(mktemp -d)"
+        node "$PAYLOAD_ROOT/bin/ks-build.mjs" --target codex --src "$SRC" --out "$stg" >/dev/null
+        check_drift "./.codex" "$stg" "Codex (.codex)"
+        rm -rf "$stg"
+      else
+        echo "· Codex (.codex) : non vérifiable ici (node ou bin/ks-build.mjs absent)."
+      fi
+    fi
     ;;
 
   *)

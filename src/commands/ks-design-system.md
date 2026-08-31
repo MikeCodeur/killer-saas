@@ -36,18 +36,10 @@ Fill the structure: @templates/design-system.md
 ### Step 3 — Write
 Write docs/design-system.md and commit it on the default branch (docs: design system). It is the project's single visual reference, read by /ks-design at every story.
 
-## Before you finish — fix the project's design source
+## Before you finish — check the project's design source
 
-`/ks-design` needs to know who draws a story's screens, and it is a **project** decision, not a
-per-story one. Ask it once here (AskUserQuestion) and write the answer into `AGENTS.md` as
-`Design source: external` or `Design source: internal`:
-
-- **internal** — the agent produces the mockup itself, directly or through a design skill
-  (`frontend-design`, `impeccable`, or whatever the project installs). It then validates it
-  visually.
-- **external** — the agent writes a brief, an external tool draws the screens, and the result is
-  dropped back as `docs/designs/<id>/mockup.html`. Dropping it is the validation.
-
-Asked here, every later `/ks-design` finds it set. Left unset, each story stops and asks again.
+`/ks-design` reads `Design source` from `AGENTS.local.md` (`internal` or `external`, plus
+`Design skill` / `Design tool`). It is set by `/ks-setup`. If it is still unset here, say so:
+every story will stop and ask until it is.
 
 End with: "Design system captured in docs/design-system.md. Story screens will build on it via /ks-design <story>."

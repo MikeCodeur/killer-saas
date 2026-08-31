@@ -12,7 +12,12 @@ You are framing a killer-saas project. Subject: $ARGUMENTS
 Use this template as the output structure:
 @templates/prd.md
 
-killer-saas builds products by replicating an existing SaaS — the target is the spec. Before anything else, lock the kill frame.
+## Step 0 — The project's settings (fail-closed)
+`AGENTS.local.md` must exist. Missing → STOP: "This project has no settings yet. Run /ks-setup, then rerun /ks-prd." Nothing below runs without it.
+
+Present → read `Merge mode`, `Target branch`, `Plan validation` and `Design source`, and repeat them in the final recap: whoever writes the PRD should see what they are committing to before writing it.
+
+killer-saas builds products by replicating an existing SaaS — the target is the spec. Then lock the kill frame.
 
 Proceed as follows:
 1. The kill preamble — ask me, one question at a time:

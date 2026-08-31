@@ -36,7 +36,7 @@ Proceed as follows:
 **Cap the plan at ~250 lines.** The decisions table stays whole — it is what stops the
 implementer re-deciding — but the prose around it need not argue twice.
 
-**Test budget: about 25 per story.** A plan that wants more says why, in its test strategy.
+**Test budget: `Test budget` from AGENTS.local.md (25 by default).** A plan that wants more says why, in its test strategy.
 The permission matrix is written ONCE, in the policy test; a service test covers the
 business rule, not the access rule again. No enum exhaustiveness, never the same rule at
 two layers, and no adapter re-asserting a 403. Full rationale in AGENTS.md, "Testing" —
@@ -51,7 +51,10 @@ invariant with no net at all.
    of a bloated plan.
 4. If planning forces a structural choice (library, pattern, data model) with rejected alternatives, record it as an ADR in `docs/decisions/` (@templates/adr.md) — it will travel with the story branch.
 5. Write the plan to `docs/plans/<id>.md`, frontmatter `validated: no`.
-6. Validation checkpoint (AskUserQuestion): "Validate this plan?" — options: Validate / I'll review it first. On Validate, set `validated: yes` in the plan's frontmatter. /ks-execute refuses an unvalidated plan.
+6. Validation, per `Plan validation` in AGENTS.local.md (missing file or setting → STOP: "No project settings. Run /ks-setup."):
+   - `human` — checkpoint (AskUserQuestion): "Validate this plan?" — options: Validate / I'll review it first. On Validate, set `validated: yes` in the plan's frontmatter.
+   - `autonomous` — no checkpoint: re-read the plan against the story's acceptance criteria, then set `validated: yes` yourself. State plainly that nobody else looked at it.
+   /ks-execute refuses an unvalidated plan either way.
 
 If the plan file already exists when the command runs, skip straight to the validation checkpoint: show the summary and ask.
 

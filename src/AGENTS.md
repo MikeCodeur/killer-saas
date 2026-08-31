@@ -1,9 +1,21 @@
 # killer-saas — Repo rules
 
+**This file belongs to the method and is rebuilt on every `install.sh` run — anything written
+here is lost.** Everything specific to this project — settings, project commands, conventions —
+lives in `AGENTS.local.md`, which the installer never overwrites and appends below these rules.
+`/ks-setup` creates it.
+
+**A rule that follows applies to every project. A value that varies is read from
+`AGENTS.local.md`.** Where a rule below names a setting (`Merge mode`, `Design source`,
+`Test budget`…), that setting is read there — never decided by the agent, and never defaulted
+when it is missing.
+
 ## Absolute rule
 No direct coding. Every feature goes through the killer-saas pipeline, in order:
 
-PRD → User Stories → Architecture (+ Design System) → then, per story: Research → Design → Plan → Execute → Review → Ship
+Setup → PRD → User Stories → Architecture (+ Design System) → then, per story: Research → Design → Plan → Execute → Review → Ship
+
+`/ks-setup` is not a phase of the cycle: it writes the project's settings once, and every command below reads them.
 
 No code is written before the story has a validated plan (`/ks-plan`). No feature ships before a passed review (`/ks-review`).
 
@@ -46,6 +58,7 @@ Before editing, verify that no other agent owns the base directory. If another
 agent is working there, coordinate ownership or stop; never overlap edits.
 
 ## Pipeline (commands)
+- `/ks-setup`      writes the project's settings and commands into AGENTS.local.md (once, first)
 - `/ks-prd`        frames the kill: target SaaS, kill mode, perimeter (WHAT + WHY)
 - `/ks-stories`    breaks it down into shippable user stories
 - `/ks-stories-review`  reviews the breakdown against the PRD perimeter (stories-reviewer subagent)
@@ -56,7 +69,7 @@ agent is working there, coordinate ownership or stop; never overlap edits.
 - `/ks-plan`       breaks a story into sequenced tasks
 - `/ks-execute`    implements the story (implementer subagent)
 - `/ks-review`     anti-hallucination review + gate (reviewer subagent)
-- `/ks-ship`       opens the PR; merge/deploy per the ship strategy (manual by default)
+- `/ks-ship`       ships the story per `Merge mode` / `Ship confirmation` (AGENTS.local.md)
 
 Utilities:
 - `/ks-orchestrator`  runs a story's full cycle with human checkpoints (plan validation, ship confirmation)
@@ -120,17 +133,20 @@ traced there, with its `file:line` and how it was found.
 - A plan executes only if its frontmatter says `validated: yes` — set by the human validation checkpoint (/ks-plan or the orchestrator), never by the file merely existing. /ks-execute is fail-closed on it.
 
 ## Ship strategy
-Merge mode: manual   (manual | auto — default: manual)
-- manual: /ks-ship opens the PR and stops. Merging is a human decision (review on GitHub, protected branch, CI). After the merge, rerun /ks-ship to confirm the deployment and clean up the branch.
-- auto: /ks-ship merges and deploys immediately after the gate. Only for solo flows where running /ks-ship IS the decision.
+Read `Merge mode`, `Target branch` and `Ship confirmation` from `AGENTS.local.md`.
+
+- `Merge mode: pr` — /ks-ship opens a PR against the target branch. With `Ship confirmation: human` it stops there and merging is a human decision (review on GitHub, protected branch, CI); rerun /ks-ship after the merge to confirm the deployment and clean up. With `automatic` it squash-merges and deploys right after the gate.
+- `Merge mode: local` — no PR: /ks-ship squash-merges the story into the target branch locally, for a solo flow with no review platform. `Ship confirmation: human` still asks before merging.
+
+Whatever the mode, the merge is a **squash**: one story, one commit on the target branch.
 
 ## Design
 
-Design source: <unset>   (external | internal — fixed once per project, see /ks-design-system)
+Read `Design source` from `AGENTS.local.md` — a project decision, never a per-story one.
 
-- `internal`: the agent produces the mockup, directly or through a design skill.
-- `external`: the agent writes a brief, an external tool produces the screens, and the mockup is
-  dropped back into `docs/designs/<id>/`. Dropping it **is** the validation.
+- `internal`: the agent produces the mockup, directly or through the skill named by `Design skill`.
+- `external`: the agent writes a brief, the tool named by `Design tool` produces the screens, and
+  the mockup is dropped back into `docs/designs/<id>/`. Dropping it **is** the validation.
 
 The global design system lives in `docs/design-system.md` (components + tokens, anchored to the boilerplate). Each story's design lives in its own folder, `docs/designs/<id>/` — `design.md`, `mockup.html`, `brief.md` when an external tool produced it, and any extra frames beside them.
 - A story's design can be produced by the agent itself, by an internal design skill, or by an external tool that holds the design system and whose result is brought back. Either way it builds on the design system, and the pipeline prescribes neither the tool nor the skill.
@@ -165,7 +181,7 @@ All pipeline data lives in markdown files under docs/, versioned by git. No data
 
 ## Testing
 
-**Budget: about 25 tests per story, and a story that needs more says why in its plan.**
+**Budget: `Test budget` from `AGENTS.local.md` (25 by default), and a story that needs more says why in its plan.**
 
 Measured on a batch of eleven stories run through this pipeline: the suite grew by 614
 tests, about 56 per story — and in the same batch **seven of those eleven shipped their
@@ -226,6 +242,13 @@ deleted is worse than no test** — it hides the hole it claims to cover.
 | Format | never as a repo-wide sweep — format the staged files at commit; a story is one commit |
 
 ## Technical conventions
+In `AGENTS.local.md`, under "Project conventions" — filled by `/ks-architect` from the boilerplate.
+
+## Never edit an installed file
+A command, an agent or a skill under `.claude/` or `.codex/` is **replaced without warning** on
+the next `install.sh`. Anything edited there is lost, silently. What is specific to this project
+becomes a setting read from `AGENTS.local.md`; what is a genuine improvement goes upstream into
+the method's `src/`. Run `install.sh --check` to list what has drifted before updating.
 
 ## Definition of Done (per feature)
 - Single PR, structured description, readable diff

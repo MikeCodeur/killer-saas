@@ -34,24 +34,21 @@ You are FORBIDDEN from:
 - Present → load it. Its tokens and components are the only visual source, whichever path is taken. Read the real values from the code as well (the stylesheet that defines the tokens): the document describes intent, the stylesheet holds the numbers, and the numbers win.
 
 ### Step 2 — Read the project's design source (fail-closed)
-The path is **fixed once per project**, not decided per story. Read `Design source:` from
-`AGENTS.md`:
+The path is **fixed once per project**, not decided per story. Read `Design source` from
+`AGENTS.local.md`:
 
-- `internal` → the agent produces the mockup itself, directly or through a design skill.
-- `external` → the agent writes the brief and an external tool produces the screens.
+- `internal` → the agent produces the mockup itself, directly or through the skill named by `Design skill`.
+- `external` → the agent writes the brief and the tool named by `Design tool` produces the screens.
 
-**If the setting is absent, or still reads `<unset>`**, ask once (AskUserQuestion) which of the two this project uses, and
-**write the answer into `AGENTS.md`** — it is a project decision, not a per-story one, and asking
-it again every story is how a project ends up with half its designs made one way.
+**No `AGENTS.local.md`, or the setting absent, or still `—`: stop.** Return the question to the
+caller — "Which design source does this project use? Run /ks-setup, or set `Design source` in
+AGENTS.local.md." Do not pick a default: a project silently set to one path produces designs its
+owner never chose.
 
-**If it is unset and nobody can answer this turn, stop.** Return the question to the caller. Do
-not pick a default: a project silently set to one path produces designs its owner never chose. The
-usual place this gets answered is `/ks-design-system`, which runs once — after that every story
-finds it set.
-
-Neither the external tool nor the internal skill is prescribed here. Any tool that holds the design
-system qualifies; a project may point at a hosted design tool, an MCP, or an internal skill such as
-`frontend-design` or `impeccable`. Only the deliverable and the verification are fixed.
+Neither the external tool nor the internal skill is prescribed by the method. Any tool that holds
+the design system qualifies; a project may point at a hosted design tool, an MCP, or an internal
+skill such as `frontend-design` or `impeccable`. Only the deliverable and the verification are
+fixed.
 
 ### Step 3 — Read the inputs
 Read `docs/stories.md` and isolate the target story's acceptance criteria.
