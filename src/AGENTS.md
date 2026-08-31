@@ -5,6 +5,11 @@ here is lost.** Everything specific to this project — settings, project comman
 lives in `AGENTS.local.md`, which the installer never overwrites and appends below these rules.
 `/ks-setup` creates it.
 
+**After editing `AGENTS.local.md` by hand, rerun `install.sh`.** This file is assembled at install
+time, so until then it carries the previous version of the project's conventions — and it is the
+one an agent loads automatically. Pipeline settings are read straight from `AGENTS.local.md` and
+take effect at once; conventions only travel through here.
+
 **A rule that follows applies to every project. A value that varies is read from
 `AGENTS.local.md`.** Where a rule below names a setting (`Merge mode`, `Design source`,
 `Test budget`…), that setting is read there — never decided by the agent, and never defaulted

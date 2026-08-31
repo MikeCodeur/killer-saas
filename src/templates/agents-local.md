@@ -7,6 +7,11 @@ Every value below is read by the pipeline commands. One setting per line, `Name:
 else on the line: a command reads the value as everything after the colon, trimmed. Change any of
 them at any time.
 
+**After changing anything here, rerun `install.sh`** — it reassembles `AGENTS.md` from the method's
+rules plus this file, and `AGENTS.md` is what an agent loads automatically. Settings are also read
+straight from here, so those take effect immediately; the conventions at the bottom only reach an
+agent through `AGENTS.md`, and stay stale until you reinstall.
+
 ## Pipeline settings
 
 ```
