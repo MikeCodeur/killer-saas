@@ -32,5 +32,3 @@ Research: `docs/research/<id>.md` — read it first; this plan does not repeat i
 
 ## Definition of Done
 <repo DoD, specialized to the story>
-
-<< IP Mike: task granularity, what a good plan contains/avoids. >>

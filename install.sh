@@ -135,10 +135,11 @@ install_hooks() {
   command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1 || {
     echo "⚠  Pas un repo git — hooks non posés. (git init puis ./install.sh --hooks)"; return 0; }
   mkdir -p ./.ks-hooks
-  cp "$SRC/hooks/ks-gate.sh" "$SRC/hooks/pre-commit" "$SRC/hooks/pre-push" ./.ks-hooks/
-  chmod +x ./.ks-hooks/ks-gate.sh ./.ks-hooks/pre-commit ./.ks-hooks/pre-push
+  cp "$SRC/hooks/ks-gate.sh" "$SRC/hooks/pre-commit" ./.ks-hooks/
+  chmod +x ./.ks-hooks/ks-gate.sh ./.ks-hooks/pre-commit
   git config core.hooksPath .ks-hooks
-  echo "✅ Git hooks posés (core.hooksPath=.ks-hooks). Gates : pas de code sans plan validé, pas de ship sans review."
+  echo "✅ Git hooks posés (core.hooksPath=.ks-hooks). Gate : pas de code sans plan validé."
+  echo "   Le gate de ship (ks-gate ship-allowed <id>) se pose en CI / branch protection."
   echo "   Désactiver : git config --unset core.hooksPath"
 }
 

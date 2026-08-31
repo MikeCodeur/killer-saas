@@ -226,7 +226,6 @@ deleted is worse than no test** — it hides the hole it claims to cover.
 | Format | never as a repo-wide sweep — format the staged files at commit; a story is one commit |
 
 ## Technical conventions
-<< IP Mike: boilerplate structure, stack, patterns, naming, commit rules. >>
 
 ## Definition of Done (per feature)
 - Single PR, structured description, readable diff

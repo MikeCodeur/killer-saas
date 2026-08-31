@@ -34,5 +34,3 @@ Technical, time, dependencies.
 
 ## Success criteria
 <parity checklist on the perimeter + the angle. Measurable.>
-
-<< IP Mike: filling guidelines, framing questions, examples. >>

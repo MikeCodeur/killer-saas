@@ -19,5 +19,3 @@ Principles:
 Example — bad vs good:
 - Bad: "s01 — Set up the database". A technical layer: no user value, nothing testable end to end, unshippable alone.
 - Good: "s01-submit-testimonial — As a visitor I want to submit a testimonial so that the owner can review it." Criteria: a valid submission is persisted and confirmed; an invalid one shows field errors and persists nothing. The table gets created because this story needs it — as a task inside the story, not as a story.
-
-<< IP Mike: target granularity, good/bad story examples, exact criteria format. >>

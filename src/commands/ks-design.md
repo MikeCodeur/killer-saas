@@ -40,11 +40,11 @@ The path is **fixed once per project**, not decided per story. Read `Design sour
 - `internal` → the agent produces the mockup itself, directly or through a design skill.
 - `external` → the agent writes the brief and an external tool produces the screens.
 
-**If the setting is absent**, ask once (AskUserQuestion) which of the two this project uses, and
+**If the setting is absent, or still reads `<unset>`**, ask once (AskUserQuestion) which of the two this project uses, and
 **write the answer into `AGENTS.md`** — it is a project decision, not a per-story one, and asking
 it again every story is how a project ends up with half its designs made one way.
 
-**If it is absent and nobody can answer this turn, stop.** Return the question to the caller. Do
+**If it is unset and nobody can answer this turn, stop.** Return the question to the caller. Do
 not pick a default: a project silently set to one path produces designs its owner never chose. The
 usual place this gets answered is `/ks-design-system`, which runs once — after that every story
 finds it set.

@@ -25,5 +25,3 @@ Do not invent components, tokens or colors outside these.
 
 ## Expected output
 A finished static HTML mockup of each screen, using only the tokens above: every state listed, light and dark, desktop and mobile, real copy — never lorem ipsum. The design system exists, so there is no visual direction left to explore. Bring the export back — it will be saved as docs/designs/<id>/mockup.html, and it will be rendered and checked before the story is planned.
-
-<< IP Mike: brief level of detail, what makes an external tool productive on first pass. >>

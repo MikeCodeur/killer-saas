@@ -17,5 +17,3 @@ Sequence — breadth first, then one deep cut:
 Rules:
 - Verify, don't assume: name a file, a function or a signature only after opening it.
 - Don't propose rewrites. The boilerplate is imposed: conform to it.
-
-<< IP Mike: code archaeology method, real boilerplate conventions. >>

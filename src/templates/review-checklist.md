@@ -37,5 +37,3 @@
 ## Verdict
 Max severity: <critical | major | minor | none>
 Ship allowed: <yes | no>
-
-<< IP Mike: hallucination detection heuristics, false positive/negative examples. >>

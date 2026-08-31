@@ -30,5 +30,3 @@
 ## Split proposal
 <required when the verdict is 5, optional otherwise: two or three stories, the cut line,
  and what each one closes on its own.>
-
-<< IP Mike: exploration method, what a good research always verifies. >>

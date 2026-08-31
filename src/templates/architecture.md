@@ -17,5 +17,3 @@
 
 ## Design / UX
 <flows, key screens — handled in parallel if relevant>
-
-<< IP Mike: real boilerplate conventions, imposed architecture decisions. >>

@@ -32,5 +32,3 @@ Severity scale:
 - **minor** — style, naming, small cleanups.
 
 A fresh context spots these gaps better than the agent that wrote the code. That's why this review runs in an isolated subagent.
-
-<< IP Mike: real heuristics, hallucination examples seen in prod, severity thresholds. >>

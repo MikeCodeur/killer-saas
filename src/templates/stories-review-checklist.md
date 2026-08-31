@@ -30,5 +30,3 @@
 ## Verdict
 Max severity: <critical | major | minor | none>
 Stories ready: <yes | no>
-
-<< IP Mike: real splitting heuristics, examples of good/bad breakdowns, coverage thresholds. >>

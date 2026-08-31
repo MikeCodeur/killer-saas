@@ -19,5 +19,3 @@
 ## Do / Don't
 - ✅ <...>
 - ❌ <...>
-
-<< IP Mike: the real system — boilerplate tokens, components, UI rules. >>

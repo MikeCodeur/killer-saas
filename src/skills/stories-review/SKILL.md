@@ -28,5 +28,3 @@ Why it runs here: a defect in `docs/stories.md` costs a markdown edit now, and c
 ## What this review is NOT
 
 Not an implementation review. How a story will be built belongs to `/ks-research` and `/ks-plan`. Judge the breakdown, not the future code — and never rewrite the stories: report, the human fixes.
-
-<< IP Mike: real splitting heuristics, examples of breakdowns that failed in production, coverage thresholds. >>

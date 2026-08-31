@@ -7,7 +7,9 @@
 #   ks-gate plan-validated <id>     exit 0 if docs/plans/<id>.md has `validated: yes`
 #   ks-gate ship-allowed  <id>      exit 0 if docs/reviews/<id>.md has `Ship allowed: yes`
 #   ks-gate pre-commit              block a code commit on feature/<id> without a validated plan
-#   ks-gate pre-push                block pushing to the default branch a merged story without a passed review
+#
+# There is no push-time gate: /ks-ship squash-merges, so a merged story leaves no merge
+# commit to detect client-side. Enforce `ks-gate ship-allowed <id>` in CI / branch protection.
 set -euo pipefail
 
 repo_root() { git rev-parse --show-toplevel 2>/dev/null || pwd; }
@@ -65,48 +67,13 @@ pre_commit() {
   return 0
 }
 
-# Default branch name (from origin/HEAD, else main). Client-side MERGE_HEAD/MERGE_MSG
-# are unreliable at merge-hook time, so the ship gate runs at push time and reads the
-# already-written merge-commit messages instead — those are reliable committed history.
-default_branch() {
-  git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##' \
-    || true
-}
-
-pre_push() {
-  local def; def="$(default_branch)"; [ -n "$def" ] || def="main"
-  local local_ref local_sha remote_ref remote_sha rc=0 zero="0000000000000000000000000000000000000000"
-  while read -r local_ref local_sha remote_ref remote_sha; do
-    [ "$remote_ref" = "refs/heads/$def" ] || continue        # only gate the default branch
-    [ "$local_sha" != "$zero" ] || continue                  # branch deletion
-    local range
-    if printf '%s' "$remote_sha" | grep -qE '^0+$'; then
-      range="$local_sha"                                     # new remote branch
-    else
-      range="$remote_sha..$local_sha"                        # only the newly pushed commits
-    fi
-    local id
-    while IFS= read -r id; do
-      [ -n "$id" ] || continue
-      if ! ship_allowed "$id"; then
-        echo "ks-gate: refusing to push $remote_ref — story '$id' was merged without a passed review." >&2
-        rc=1
-      fi
-    done < <(git log --merges --format='%s' "$range" 2>/dev/null \
-              | sed -n "s/.*Merge branch '\\(feature\\/[^']*\\)'.*/\\1/p" \
-              | sed 's#^feature/##' | sort -u)
-  done
-  return "$rc"
-}
-
 cmd="${1:-}"
 case "$cmd" in
   plan-validated)  plan_validated "${2:?story id required}" ;;
   ship-allowed)    ship_allowed   "${2:?story id required}" ;;
   pre-commit)      pre_commit ;;
-  pre-push)        pre_push ;;
   *)
-    echo "usage: ks-gate {plan-validated <id>|ship-allowed <id>|pre-commit|pre-push}" >&2
+    echo "usage: ks-gate {plan-validated <id>|ship-allowed <id>|pre-commit}" >&2
     exit 2
     ;;
 esac

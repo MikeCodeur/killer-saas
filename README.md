@@ -82,7 +82,8 @@ The method's guardrails don't have to depend on a specific tool's permissions. O
     ./install.sh --hooks        # (add to any target)
 
 - **pre-commit** — refuses code on a `feature/<id>` branch without a validated plan (`docs/plans/<id>.md` → `validated: yes`). Docs-only commits always pass.
-- **pre-push** — refuses pushing the default branch when a merged story lacks a passed review (`docs/reviews/<id>.md` → `Ship allowed: yes`).
+
+The ship gate stays server-side: `/ks-ship` squash-merges, so a merged story leaves no merge commit a client-side hook could detect. Run `ks-gate ship-allowed <id>` in CI or branch protection instead.
 
 Reversible: `git config --unset core.hooksPath`. On Claude the harness also enforces "no direct coding" via tool permissions; the hooks make the same guarantees hold on Codex (and, later, Gemini) — enforcement lives in the repo, not the tool.
 
