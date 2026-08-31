@@ -119,13 +119,13 @@ sync_templates() {
 # maintenance de la méthode, pas celles du pipeline. Ne jamais l'écraser en s'auto-installant.
 is_method_repo() { [ -f ./src/commands/ks-prd.md ] && [ -f ./install.sh ]; }
 
-# AGENTS.local.md appartient au projet : posé une fois s'il est absent, jamais réécrit.
-seed_agents_local() {
-  local payload="$1"
+# AGENTS.local.md appartient au projet, et /ks-setup en est le SEUL créateur : l'installeur ne
+# le pose pas. Un fichier posé ici avec des valeurs par défaut ferait passer /ks-setup pour
+# "déjà configuré", et le projet hériterait de réglages que personne n'a choisis.
+warn_agents_local() {
   is_method_repo && return 0
   [ -f ./AGENTS.local.md ] && return 0
-  cp "$payload/templates/agents-local.md" ./AGENTS.local.md
-  echo "→ ./AGENTS.local.md créé (réglages par défaut). Ajuste-le, ou lance /ks-setup."
+  echo "→ Réglages absents — lance /ks-setup pour créer ./AGENTS.local.md."
 }
 
 # AGENTS.md appartient à la méthode : réécrit à chaque install, avec AGENTS.local.md concaténé.
@@ -194,11 +194,11 @@ install_target() {
   case "$1" in
     claude)
       copy_tooling_claude "./.claude"
-      sync_templates "$SRC"; seed_agents_local "$SRC"; assemble_agents_md "$SRC"; wire_claude_md
+      sync_templates "$SRC"; assemble_agents_md "$SRC"; warn_agents_local; wire_claude_md
       echo "✅ killer-saas installé (Claude, projet, version $VERSION). Commandes : /ks-prd … /ks-ship" ;;
     codex)
       copy_tooling_codex "./.codex"
-      sync_templates "$SRC"; seed_agents_local "$SRC"; assemble_agents_md "$SRC"   # AGENTS.md natif Codex, pas de CLAUDE.md
+      sync_templates "$SRC"; assemble_agents_md "$SRC"; warn_agents_local   # AGENTS.md natif Codex, pas de CLAUDE.md
       echo "✅ killer-saas installé (Codex, projet, version $VERSION). Skills : ks-prd … ks-ship dans .codex/skills." ;;
     all)
       install_target claude
@@ -242,7 +242,7 @@ case "$MODE" in
     # Après un --global : pose les fichiers PROJET (templates + rules), sans retoucher au tooling
     # déjà installé globalement. C'est la seule différence avec le mode projet.
     local_src="$SRC"; [ -d "$local_src/templates" ] || local_src="$CACHE"
-    sync_templates "$local_src"; seed_agents_local "$local_src"; assemble_agents_md "$local_src"
+    sync_templates "$local_src"; assemble_agents_md "$local_src"; warn_agents_local
     case "$TARGET" in claude|all) wire_claude_md ;; esac   # CLAUDE.md seulement si Claude est cible
     echo "✅ templates + rules ajoutés à $(pwd) (cible $TARGET)"
     if [ "$HOOKS" = 1 ]; then install_hooks; fi

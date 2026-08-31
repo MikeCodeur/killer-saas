@@ -10,6 +10,11 @@ lives in `AGENTS.local.md`, which the installer never overwrites and appends bel
 `Test budget`…), that setting is read there — never decided by the agent, and never defaulted
 when it is missing.
 
+**How to read one:** in `AGENTS.local.md`, never in `AGENTS.md` — the rules quote the setting
+names in prose, so grepping the assembled file returns the prose too. One setting per line,
+`Name: value`, the value being everything after the colon, trimmed. A value of `—` means the
+project does not have that thing; say so rather than substituting one.
+
 ## Absolute rule
 No direct coding. Every feature goes through the killer-saas pipeline, in order:
 

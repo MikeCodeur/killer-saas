@@ -19,6 +19,9 @@ You are FORBIDDEN from:
 - Asking more than the four questions below. Everything else has a default the user can change later.
 - Inventing a project command you have not seen in the repository.
 
+This command is the **only** creator of `AGENTS.local.md` — `install.sh` never writes it, so
+finding it absent is the normal case, not an error.
+
 If `AGENTS.local.md` already exists → do NOT overwrite it. Show its current settings and stop:
 "Settings already in AGENTS.local.md. Edit that file directly, or delete it and rerun /ks-setup."
 
@@ -48,8 +51,10 @@ validates plans by hand confirms its ships by hand.
 
 ### Step 3 — Write it
 Write `AGENTS.local.md` from @templates/agents-local.md, filled with the answers and the
-defaults. Leave "Project conventions" as its placeholder — `/ks-architect` fills it from the
-boilerplate.
+defaults. Keep its shape exactly: one setting per line, `Name: value`, **no trailing comment** —
+the commands read the value as everything after the colon, so a comment on the line becomes part
+of the value. The accepted values stay in the table below the block. Leave "Project conventions"
+as its placeholder — `/ks-architect` fills it from the boilerplate.
 
 Commit it on the default branch (`chore: project settings`). It is a project file, not a story file.
 
