@@ -3,6 +3,23 @@
 > Fresh-context review. Each issue classified: critical / major / minor.
 > Diff reviewed: `git diff <default-branch>...feature/<id>`
 
+Review status: <complete | blocked>
+
+If blocked, do not leave this implicit:
+
+## Review failure
+### Failure cause
+<concrete command, tool, prerequisite, or state that prevented completion, including the error>
+
+### Missing
+<exact evidence, file, setting, or access that was unavailable>
+
+### Required adaptation
+<precise change or input the project agent must provide before rerunning>
+
+### Next action
+<exact command or human gesture>
+
 ## Plan compliance
 - [ ] The code does what the plan specifies, nothing more
 - [ ] Run interdicts respected — each one checked and named
