@@ -29,19 +29,18 @@ If you can't invoke the Agent tool, stop and report the error. Don't improvise.
 3. From that worktree, read docs/plans/<id>.md. If it doesn't exist, STOP: ask for /ks-plan <id> first. Go no further.
 4. Check the plan's frontmatter: it must contain `validated: yes`. Otherwise STOP: "Plan not validated. Review it, then rerun /ks-plan <id> to validate."
 5. Read docs/reviews/<id>.md from the worktree if it exists. If it contains `Ship allowed: no`, this is a FIX run: the review findings come first.
-6. Read AGENTS.local.md: the project commands (`Test`, `Typecheck`, `E2E`, `Build`) and `Test budget`. Missing file → STOP: "No project settings. Run /ks-setup." A command left at `—` is one the implementer must not invent: pass it along as unavailable.
+6. Read AGENTS.local.md: the project commands (`Test`, `Typecheck`, `E2E`, `Build`), `Test budget`, and the stages (`Full suite`, `E2E stage`, `Build stage`). Missing file → STOP: "No project settings. Run /ks-setup." A command left at `—` is one the implementer must not invent: pass it along as unavailable.
 
 ### Step 2 — Delegate
 Invoke the Agent tool:
 - subagent_type: implementer
 - description: Implement story <id>
 - working directory: the absolute dedicated worktree path verified in Step 1.
-- prompt: Implement story <id> from docs/plans/<id>.md, following docs/architecture.md and AGENTS.md. Read docs/research/<id>.md first when it exists — the plan decides, the research holds the verified facts and the traps, and you commit it. The worktree and branch are already prepared and verified: do not create a worktree, switch branches, checkout, or stash. Task by task, in plan order: write the task as a whole block, run its focused suite, tick the checkbox. No red-first ceremony and no invariant mutations. Focused suite per task; full suite once at the end (twice if a task touched a shared file); end-to-end once at the end, never in the loop; the type check once at the very end, after the last edit. Where the tests go is settled in AGENTS.md, "Where the tests go"; the budget is `Test budget` from AGENTS.local.md. Run the project's own commands, quoted verbatim from AGENTS.local.md: test <Test>, typecheck <Typecheck>, e2e <E2E>, build <Build>. A command given as `—` does not exist in this project: say so, never substitute one. One single commit at the end of the story, carrying the story docs and every task — never one commit per task. Implement only what the plan specifies.
-- On a FIX run, prepend to the prompt: This story was blocked in review. Read the complete latest report and make a checklist of every open finding and every unimplemented plan task. Fix all of them in this loop; do not select only the newest or highest-severity item. For each item, record the correction and its focused verification before returning to review. If Playwright remains unstable after one stabilization attempt, use the available browser MCP to verify the same local test flow; local documented test accounts are pre-authorized, never real accounts or secrets.
-
+- prompt: Implement story <id> from docs/plans/<id>.md. Your agent definition is your contract — this prompt carries only what is specific to this run. The worktree and branch are prepared and verified: do not create a worktree, switch branches, checkout, or stash. The project commands, `Test budget` and the stages live in AGENTS.local.md — quote them verbatim, and one left at `—` does not exist in this project.
+- On a FIX run, add: This story was blocked in review. docs/reviews/<id>.md is your fix list; your definition says how to work it.
 Wait for the agent to finish. Capture its summary.
 
 ### Step 3 — Report
-Summarize: tasks done, files touched, tests added, and any blocker the agent reported. No line-by-line detail.
+Summarize: tasks done, files touched, tests added, what the verification record says (commands, exit codes, tree), and any blocker the agent reported. No line-by-line detail.
 
 End with: "Implementation done. Next step: /ks-review <id>"

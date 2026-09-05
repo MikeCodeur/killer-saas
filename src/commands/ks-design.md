@@ -25,8 +25,11 @@ You are FORBIDDEN from:
 - Inventing a component, token, color or spacing outside the design system.
 - Designing a screen the story doesn't ask for.
 - Handing over a mockup you have not rendered and looked at (Step 5).
+- Drawing a mockup for a screen the product already ships (Step 4), or measuring anything at all.
 
 ## Workflow
+
+Apply the `design-doctrine` skill: it carries the full rules this command applies.
 
 ### Step 1 — Prerequisites (fail-closed)
 `docs/design-system.md` must exist and be non-empty.
@@ -46,9 +49,10 @@ AGENTS.local.md." Do not pick a default: a project silently set to one path prod
 owner never chose.
 
 Neither the external tool nor the internal skill is prescribed by the method. Any tool that holds
-the design system qualifies; a project may point at a hosted design tool, an MCP, or an internal
-skill such as `frontend-design` or `impeccable`. Only the deliverable and the verification are
-fixed.
+the design system qualifies — a hosted design tool, an MCP, or a front-end skill such as
+`frontend-design`, `impeccable` or another. **All of them are optional: with `Design skill: —`
+the agent draws the screen itself, and that is a complete internal path, not a degraded one.**
+Only the deliverable and the verification are fixed.
 
 ### Step 3 — Read the inputs
 Read `docs/stories.md` and isolate the target story's acceptance criteria.
@@ -57,46 +61,54 @@ Then read `docs/research/<id>.md`. **Research is the substance of this step, not
 
 If the PRD names a target SaaS, its equivalent screen is a layout and UX reference — structure and states only, never visual identity. The design covers this story's screen only.
 
-### Step 4 — Produce
-**Fidelity: finished.** The design system exists, so there is no visual direction left to explore — there is a screen to derive. That means real tokens, real typography, real spacing, real copy, and every state the screen has: empty, loading, error, refused-without-leaking, plus any domain state (archived, paused, read-only). Light and dark. Desktop and mobile. Never lorem ipsum, never an invented identity.
+### Step 4 — New screen, or derived screen?
 
-Low fidelity is for the rare case where a screen's structure is genuinely open and two or three directions must be compared before committing. Say so explicitly when you use it.
+Answer this first: it decides what the phase produces.
 
-**AUTONOMOUS path** — the agent produces:
-- `docs/designs/<id>/design.md` (structure: @templates/design-screen.md)
-- `docs/designs/<id>/mockup.html` — the screen, using exclusively the design system's tokens and components. Extra frames live beside it under the same folder.
+**Derived** — the story composes, extends or restates something the product already ships (a
+column on a list, a state on an existing table, one more field on a form). Produce
+`docs/designs/<id>/design.md` **only**: the reference screen named, and the deltas — what
+appears, changes, disappears, in which states. **No mockup**: the screen already exists, and
+drawing it again draws the product twice. It gets verified for real in a browser at the end of
+Execute, which is where the defects that stop a feature working are found.
 
-**The mockup is always produced.** Even when the screen composes one that already ships, it is
-drawn: `design.md` names the reference screen and lists the deltas, **and** the mockup shows them.
-That is what someone can look at in thirty seconds, and it is the only artifact that exists before
-the code does. A phase that ends without one has not run.
+**New** — the product has nothing like it. Produce `design.md` **and exactly one** visual
+deliverable, chosen by `Design source`, never both:
 
-**BRIEF path** — the agent writes the brief, the external tool produces the screens:
-1. `docs/designs/<id>/brief.md` (structure: @templates/design-brief.md): every screen with its layout, exact fields and actions, every state, and the design-system constraints **copied in** so the brief is self-contained and pasteable. Out-of-scope stated. **This file is the deliverable of this step — not a chat message.** A file survives the session and can be picked up by a different agent or a different tool.
-2. The result comes back (exported HTML, screenshot or description). Record it as `docs/designs/<id>/mockup.html` and write `docs/designs/<id>/design.md` describing the screen and pointing at it.
-3. Nothing came back → **the phase is not finished.** Stop and wait: "Brief ready in
-   docs/designs/<id>/brief.md — take it to your design tool and drop the result as
-   docs/designs/<id>/mockup.html, then rerun /ks-design <id>." Do not generate in its place, and do
-   not hand over to `/ks-plan`. On this path, **dropping the mockup is the validation** — there is
-   nothing else to approve.
+- `internal` → `mockup.html`, the screen built exclusively from the design system's tokens and
+  components. Extra frames beside it, same folder.
+- `external` → `brief.md` (@templates/design-brief.md): every screen with its layout, exact
+  fields and actions, every state, out-of-scope stated, and the design-system constraints
+  copied in so it is self-contained and pasteable. **That file is the deliverable — not a chat
+  message**: it survives the session and travels to the tool. The result comes back as
+  `mockup.html` in the same folder, and dropping it there **is** the validation. Nothing came
+  back → the phase is unfinished: stop and say so. Never generate in its place, never hand
+  over to `/ks-plan`.
 
-### Step 5 — Render it and look at it (both paths, no exception)
-A mockup that has never been displayed has not been verified — reading the markup is not looking at the screen. This step **sends you back**: what it finds gets fixed before handover, it is not a checkbox at the end.
+**Fidelity: finished.** The design system exists, so there is no direction left to explore —
+only a screen to derive. Real tokens, typography, spacing and copy, and every state the screen
+has: empty, loading, error, refused-without-leaking, plus any domain state. Light and dark,
+desktop and mobile. Never lorem ipsum, never an invented identity. Low fidelity only when a
+screen's structure is genuinely open and two or three directions must be compared — say so
+explicitly when you use it.
 
-It applies to a mockup brought back from an external tool exactly as it applies to a generated one — nothing guarantees an external tool honoured the real tokens.
+### Step 5 — Render it and look at it (new screens only)
 
-Four checks:
-- **Open it in a browser.** Serve it over local HTTP; a `file://` URL may be refused by the browser tooling.
-- **Both themes.** Most rendering regressions are visible in only one of the two.
-- **Both widths**, desktop and mobile, with no horizontal overflow.
-- **Contrast measured**, not judged by eye, on every text/surface pair. A pair at 4.2:1 and a pair
-  at 4.8:1 look identical; only one passes. This is a condition for producing a good mockup — and
-  it is the one check an external tool cannot be trusted on, since nothing guarantees it honoured
-  the real tokens.
+Reading markup is not looking at a screen, and this step **sends you back**: what it finds gets
+fixed before handover. It applies to a mockup returned by an external tool exactly as to a
+generated one — nothing guarantees the tool honoured the real tokens. A derived screen has no
+mockup: skip this step.
 
-Then report what was checked **and what could not be checked**. No browser available is an acceptable outcome; skipping the step in silence is not — an explicit "not verified" is actionable, an omission is not.
+- **Open it in a browser**, served over local HTTP — a `file://` URL may be refused.
+- **Both themes**, and **both widths**, with no horizontal overflow.
 
-Beware of a browser configured to force dark mode: it repaints light frames dark whatever the page does, and costs an hour chasing a bug that isn't there.
+**Measure nothing** (the rule and its reason are in the `design-doctrine` skill). **Look for
+what is BROKEN**: horizontal overflow, unreadable text, a control that disappeared, a missing
+state, a layout that collapses.
+
+Then report what was checked **and what could not be** — "no browser available" is an
+acceptable outcome, silent skipping is not. Beware a browser forcing dark mode: it repaints
+light frames dark whatever the page does.
 
 ### Step 6 — Gaps
 Any need the design system doesn't cover → record it under "Design system gaps" in `design.md`. **Never invent it.** A gap reported is a decision handed to the right person; a gap filled freestyle is drift that the next story inherits.
@@ -111,8 +123,9 @@ Everything lands in the repository, under `docs/designs/<id>/`, and travels with
 ## Mockup status (hard rule)
 `mockup.html` is a **reference, not code to copy**. In Execute the screen is built with the boilerplate's real components. The mockup communicates intent — layout, states, hierarchy; it never replaces the component system and never gets pasted into production.
 
-**The phase ends when `docs/designs/<id>/mockup.html` exists, and not before.** On the internal
-path the agent validates it visually — rendered, both themes, both widths. On the external path,
-the mockup being dropped in the folder is the validation.
+**The phase ends when its deliverable exists, and not before** — `design.md` alone for a
+derived screen; `design.md` plus the one visual artifact for a new one. On the internal path
+the agent validates that artifact visually, rendered, both themes, both widths; on the
+external path, the mockup being dropped in the folder is the validation.
 
-End with: "Design ready (docs/designs/<id>/design.md + mockup.html), rendered and checked. Next step: /ks-plan <id>"
+End with: "Design ready (docs/designs/<id>/design.md, + mockup.html or brief.md when the screen is new), rendered and checked. Next step: /ks-plan <id>"

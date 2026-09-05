@@ -20,6 +20,8 @@ You are FORBIDDEN from:
 
 If no visual direction is provided AND the boilerplate has no existing system → STOP, ask for the source: tokens, mockups or a description, from whichever tool produced them.
 
+Apply the `design-doctrine` skill: it carries the full rules this command applies.
+
 ## Workflow
 
 ### Step 1 — Gather the sources
@@ -33,7 +35,17 @@ Fill the structure: @templates/design-system.md
 - Imposed UI patterns (forms, states, feedback)
 - Do / Don't
 
-### Step 3 — Write
+### Step 3 — Measure the contrasts, once, here
+**This is the only phase that measures anything.** Render the tokens against each other —
+every text/surface pair the system can produce, light and dark — and **measure** the ratios
+rather than judging them by eye: a pair at 4.2:1 and one at 4.8:1 look identical, and only one
+passes. Failing pairs are fixes to the tokens, never per-story exceptions.
+
+Done here on a system that does not move between stories, it holds for every screen that
+system can build — which is why no later phase repeats it. Beware a browser forcing dark mode:
+it repaints light frames dark whatever the page does.
+
+### Step 4 — Write
 Write docs/design-system.md and commit it on the default branch (docs: design system). It is the project's single visual reference, read by /ks-design at every story.
 
 ## Before you finish — check the project's design source

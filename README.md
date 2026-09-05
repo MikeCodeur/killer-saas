@@ -10,7 +10,9 @@ cross-cutting, or uncertain, the normal pipeline remains mandatory. See
 [DOC.md](DOC.md#quick-fix-mode) for the complete boundary.
 
 ## Pipeline
-PRD → User Stories → Stories Review → Architecture + Design System → then, per story: Research → Design → Plan → Execute → Review → Ship
+Setup → PRD → User Stories → Stories Review → Architecture + Design System → then, per story: Research → Design → Plan → Execute → Review → Ship
+
+A small story takes the short track instead: **`/ks-flow`** runs that same cycle in three contexts rather than six — research and plan fused in one pass, then the same implementer, the same fresh-context reviewer, the same gates.
 
 ![killer-saas pipeline overview](docs/images/pipeline-overview-dark.png)
 
@@ -68,7 +70,7 @@ After a global install, drop the per-project files (templates + rules) in each p
     ~/.claude/killer-saas/install.sh init                 # Claude
     ~/.claude/killer-saas/install.sh init --target codex  # Codex
 
-`AGENTS.md` (the rules) is shared and read natively by both tools; on Claude a one-line `CLAUDE.md` imports it. The 4 skills are the open `SKILL.md` standard, so they carry over unchanged; the 13 `ks-*` commands are emitted as Codex skills. Gemini CLI is planned next — see the fidelity matrix in [DOC.md](DOC.md).
+`AGENTS.md` (the rules) is shared and read natively by both tools; on Claude a one-line `CLAUDE.md` imports it. The 6 skills are the open `SKILL.md` standard, so they carry over unchanged; the 16 `ks-*` commands are emitted as Codex skills. See the fidelity matrix in [DOC.md](DOC.md).
 
 When maintaining killer-saas itself, edit only `src/AGENTS.md`. The root
 `AGENTS.md` and `CLAUDE.md` are ignored local-install artifacts; `CLAUDE.md`
@@ -102,10 +104,11 @@ What it does — and doesn't:
 - Cleanly replaces the method's tooling, tracked per target in `.ks-manifest` (`.claude/` or `.codex/` — your own commands/skills are never touched, renamed or removed files leave no ghosts).
 - Refreshes the templates you haven't modified; a locally modified template is never overwritten (you get a warning instead — add `--force` to overwrite).
 - Stamps the installed version in `.ks-version`.
-- Never touches `AGENTS.md`: if the method's rules evolved, merge by hand.
+- Rebuilds `AGENTS.md` from the method's rules plus your `AGENTS.local.md`, which it never touches. Your settings and conventions survive; the method's rules come through updated.
 
 ## Usage
 
+    /ks-setup                  # once: the project's settings and commands
     /ks-prd <target-saas>
     /ks-stories
     /ks-stories-review
@@ -119,16 +122,17 @@ What it does — and doesn't:
     /ks-review <story>
     /ks-ship <story>
 
-    # or run a story's full cycle (with human checkpoints):
+    # a small story — the same cycle, short track:
+    /ks-flow <story>
+
+    # a story's full cycle, with the two human checkpoints:
     /ks-orchestrator <story>
 
     # where does the project stand?
     /ks-status
 
-    # lost? pipeline map (français) :
+    # the pipeline map
     /ks-help
-
-On **Codex**, the same steps run as skills (e.g. `ks-prd`, `ks-execute`) — same order, same gates. The git hooks (`--hooks`) enforce the pipeline the same way on both tools.
 
 ## Autonomous mode — `/goal`
 

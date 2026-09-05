@@ -23,9 +23,20 @@ Règle unique : interdit de coder en direct. Chaque feature passe par le pipelin
 11. /ks-ship <story>     — ship selon Merge mode / Ship confirmation (cf. AGENTS.local.md)
 
 Bloqué en review sur un critique → retour /ks-execute (fix mode). Sinon → /ks-ship.
+Seul un critique bloque : un majeur reste tracé dans le rapport et se corrige au cycle
+suivant, un mineur est du style. Ni l'un ni l'autre ne relance une boucle.
+
+## Voie courte — petites stories
+/ks-flow <story>         — le même cycle en 3 contextes au lieu de 6 : recherche et plan
+fusionnés en une passe, puis le subagent implementer, puis le reviewer en contexte vierge,
+puis le ship. Rien n'est relâché — worktree, plan validé, preuve par neutralisation, gate.
+Pour une complexité ≤ `Flow threshold`. Migration, écran vraiment nouveau, autorisation,
+contrat d'API ou dépendance ajoutée → escalade vers le pipeline complet, même en cours de route.
 
 ## Orchestrateur
-/ks-orchestrator <story> — enchaîne les 6 temps du cycle en une commande.
+/ks-orchestrator <story> — enchaîne les 6 temps du cycle en une commande. Avec
+`Story track: auto`, il choisit lui-même entre /ks-flow et le pipeline complet selon la
+complexité de la story.
 Il ne remplace rien : mêmes contrats, mêmes subagents, mêmes gates que les
 commandes unitaires. Il s'arrête sur 2 questions bloquantes : valider le plan
 (écrit dans le fichier plan), confirmer le ship. Cycle routinier → orchestrateur ;

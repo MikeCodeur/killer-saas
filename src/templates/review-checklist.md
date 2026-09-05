@@ -35,7 +35,7 @@ If blocked, do not leave this implicit:
 - [ ] Design system respected — components/tokens from docs/design-system.md, screen matches the intent of docs/designs/<id>/design.md (UI stories)
 
 ## Tests
-- [ ] Test suite run by the reviewer, passing
+- [ ] Verification record checked (`ks-gate verif-current <id>`): <current, taken as proof | stale/missing → suite and type check re-run here>
 - [ ] Assertions pin the acceptance criteria (no assertion-free tests)
 - [ ] Bite proven by neutralization: <what was neutralized> → <N> tests red, restored (`git diff --exit-code` clean)
 - [ ] Tests the story made redundant are named and removed — or their absence justified

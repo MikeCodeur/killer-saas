@@ -21,6 +21,8 @@ branch, detached HEAD or the repository base directory itself → STOP and run
 Read: docs/stories.md (the target story), docs/research/<id>.md (if it exists), docs/design-system.md and docs/designs/<id>/design.md (if they exist), docs/architecture.md, AGENTS.md
 Output structure: @templates/plan.md
 
+Apply the `testing-doctrine` skill when you write the test strategy.
+
 If docs/research/<id>.md doesn't exist, point out that /ks-research <id> is recommended before planning — without research, the plan relies on possibly stale docs. Continue only if I confirm.
 
 If the story has UI, the plan follows the screen defined in docs/designs/<id>/design.md: it references the design system's components and never invents new ones. The HTML mockup is a reference, not a source of code.
@@ -39,9 +41,9 @@ implementer re-deciding — but the prose around it need not argue twice.
 **Test budget: `Test budget` from AGENTS.local.md (25 by default).** A plan that wants more says why, in its test strategy.
 The permission matrix is written ONCE, in the policy test; a service test covers the
 business rule, not the access rule again. No enum exhaustiveness, never the same rule at
-two layers, and no adapter re-asserting a 403. Full rationale in AGENTS.md, "Testing" —
-a batch of eleven stories added 614 tests while seven of them shipped their central
-invariant with no net at all.
+two layers, and no adapter re-asserting a 403. Full rationale in the `testing-doctrine` skill —
+volume has repeatedly grown by dozens of tests per story while the central
+invariant shipped with no net at all.
 
 3. Anticipate the touched files and the test strategy. Test each invariant at
    the closest valuable layer and avoid proving the same behavior again in

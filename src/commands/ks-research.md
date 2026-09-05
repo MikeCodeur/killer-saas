@@ -15,11 +15,9 @@ Resolve $ARGUMENTS to the story id (`s<number>-<slug>`) against docs/stories.md.
 
 ## Workspace bootstrap (fail-closed)
 
-Before reading or writing story files, invoke the `worktree-manager` subagent
-with the resolved id and repository base directory. Continue only after it
-returns the absolute `.worktrees/<id>` path, confirms branch `feature/<id>` and
-a clean status. Perform every Research read and write in that worktree. Never
-create or checkout the feature branch in the repository base directory.
+Bootstrap or verify the story's workspace exactly as AGENTS.md, "Where work happens",
+specifies, and perform every read and write there. Report the absolute path, the branch and
+the environment files copied (names only, never values). Any conflict it names is a hard stop.
 
 If docs/reviews/stories.md is missing, or says `Stories ready: no`, say so: the breakdown hasn't passed /ks-stories-review, so this story may not match the PRD perimeter. Continue only if I confirm — this is a warning, not a block.
 
