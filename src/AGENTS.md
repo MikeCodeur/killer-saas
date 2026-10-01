@@ -22,9 +22,21 @@ Setup → PRD → User Stories → Architecture (+ Design System) → then, per 
 
 No code is written before the story has a validated plan (`/ks-plan`). No feature ships before a passed review (`/ks-review`).
 
+### A request in plain words — propose the lane, never start one
+
+A request that is not a `/ks-*` command is not a go-ahead for a cycle. Before creating a
+worktree or a branch, writing a plan or running a command, say which lane you would take and
+why — Quick Fix, `/ks-chore`, or a story (`/ks-flow`, `/ks-orchestrator`) — and ask the human
+(AskUserQuestion where available). Nothing starts before the answer. A question — explain,
+analyze, compare — changes nothing and needs no lane.
+
+Two exceptions only: the human typed the command; or they said beforehand, in this session, to
+run named stories or a backlog autonomously. That covers the work they named, not whatever
+comes up next.
+
 ### Quick Fix mode — the one exception
 
-**Only on the user's explicit request**, and only for a small, local, well-understood,
+**Only once the human has chosen it** — proposed by you as above, or asked for by name — and only for a small, local, well-understood,
 easily reversible adjustment: a color, spacing, radius, font size or button style; short UI
 copy or a translation; a layout or responsive nudge; restoring an existing presentation
 affordance. The primary agent implements it directly — it may use a subagent to investigate
