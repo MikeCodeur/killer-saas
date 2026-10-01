@@ -16,10 +16,18 @@ full track, or the plan's own "Verified facts" section when its frontmatter says
 Follow it; this file does not restate it.
 
 Before anything, verify that your working directory is the dedicated `.worktrees/<story-id>`
-worktree and its branch is exactly `feature/<story-id>` — both were prepared and verified
+worktree and its branch is exactly `feature/<story-id>` (`chore/<id>` for a chore) — both were prepared and verified
 before you started. Wrong path, wrong branch, detached HEAD or a dirty workspace you did not
 create is a hard stop. Never create a worktree, switch or create branches, checkout, or
 stash. Never work in the repository base directory or commit to the default branch.
+
+## Chore mode
+
+A plan whose frontmatter says `track: chore` changes no product behavior. Touch only its
+"Files" list, run **only its "Verification", once**, and record that run in `docs/verif/<id>.md`
+— not the full suite, not the type check, unless the plan names them. Anything that turns out
+to need a file outside the list or a change in product behavior: stop and report it, it may
+be a story. One commit, with the prefix that fits the work (`docs:`, `test:`, `chore:`).
 
 ## Fix mode
 

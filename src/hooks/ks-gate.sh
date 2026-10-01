@@ -7,7 +7,7 @@
 #   ks-gate plan-validated <id>     exit 0 if docs/plans/<id>.md has `validated: yes`
 #   ks-gate ship-allowed  <id>      exit 0 if docs/reviews/<id>.md has `Ship allowed: yes`
 #   ks-gate verif-current <id>      exit 0 if docs/verif/<id>.md proves the CURRENT code was verified
-#   ks-gate pre-commit              block a code commit on feature/<id> without a validated plan
+#   ks-gate pre-commit              block a code commit on feature/<id> or chore/<id> without a validated plan
 #
 # There is no push-time gate: /ks-ship squash-merges, so a merged story leaves no merge
 # commit to detect client-side. Enforce `ks-gate ship-allowed <id>` in CI / branch protection.
@@ -15,11 +15,12 @@ set -euo pipefail
 
 repo_root() { git rev-parse --show-toplevel 2>/dev/null || pwd; }
 
-# Extract the story id from a `feature/<id>` branch name; empty otherwise.
+# Extract the story or chore id from a `feature/<id>` or `chore/<id>` branch name; empty otherwise.
 story_id_from_branch() {
   local branch="$1"
   case "$branch" in
     feature/*) printf '%s' "${branch#feature/}" ;;
+    chore/*)   printf '%s' "${branch#chore/}" ;;
     *) printf '' ;;
   esac
 }
@@ -27,7 +28,7 @@ story_id_from_branch() {
 plan_validated() {
   local id="$1" root; root="$(repo_root)"
   local f="$root/docs/plans/$id.md"
-  [ -f "$f" ] || { echo "ks-gate: no plan for '$id' (docs/plans/$id.md missing). Run /ks-plan $id." >&2; return 1; }
+  [ -f "$f" ] || { echo "ks-gate: no plan for '$id' (docs/plans/$id.md missing). Run /ks-plan $id — or /ks-chore for a chore." >&2; return 1; }
   if grep -qE '^validated:[[:space:]]*yes[[:space:]]*$' "$f"; then
     return 0
   fi

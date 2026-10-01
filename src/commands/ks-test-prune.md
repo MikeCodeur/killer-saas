@@ -5,15 +5,17 @@ allowed-tools:
   - Glob
   - Grep
   - Bash
-  - Edit
   - Write
+  - Edit
+  - Agent
   - AskUserQuestion
 ---
 # ks-test-prune — Prune the end-to-end suite
 
 The doctrine stops new specs from bloating the suite. This command treats the specs already
 there: a project that ran before the rules has a suite that is slow, coupled to its copy, and
-replayed by every story. Run it on demand, outside any story's cycle.
+replayed by every story. Run it on demand, outside any story's cycle. **It is a `/ks-chore`
+with its own audit**: the audit replaces the chore's mini-plan, the rest is the chore's.
 
 It changes tests, not the product. **The one product change allowed is adding a
 `data-testid` attribute** a rewritten spec selects on. Anything else the audit uncovers — a
@@ -23,8 +25,8 @@ real bug, a missing test — goes to the issue tracker.
 
 1. `AGENTS.local.md` exists, `E2E` is not `—`? Otherwise STOP and say which.
 2. Find the suite: the test directory of the end-to-end runner's own config. Never guess it.
-3. Id: `test-prune-<YYYYMMDD>`. Create or verify `.worktrees/<id>` on `feature/<id>` exactly as
-   AGENTS.md, "Where work happens", specifies for a story — sandbox included. Report the
+3. Id: `test-prune-<YYYYMMDD>`. Create or verify `.worktrees/<id>` on `chore/<id>` exactly as
+   AGENTS.md, "Where work happens", specifies — sandbox included. Report the
    absolute path, the branch and the environment files copied (names only). Every read and
    write below happens there.
 
@@ -53,7 +55,7 @@ never deleted — rewritten at worst. Doubt → keep, and say why.
 
 Write `docs/plans/<id>.md`: a table spec | tests | verdict | reason (with the covering test
 for a delete) | what a rewrite keeps; then the totals before → after (specs, tests, lines).
-Frontmatter `validated: no`.
+Frontmatter `validated: no`, `track: chore`.
 
 ## Phase 3 — CHECKPOINT (always human)
 
@@ -62,23 +64,19 @@ Validate / Modify / Stop. Modify → apply the human's changes to the plan and a
 Validate writes `validated: yes` into the frontmatter; Stop ends the command, the plan stays
 as a record. Deleting a test is the one decision here nobody may take for the human.
 
-## Phase 4 — Apply
+## Phase 4 — Apply (delegated)
 
-Delete and rewrite exactly as the validated plan says, nothing more. A rewrite keeps the
-effect assertion, cuts the matrix to its one representative case, and moves copy selectors to
-a role or a `data-testid`.
-
-Then **one run** of `<E2E>` over the whole remaining suite, against the sandbox. Red on a
-spec this command touched → fix the rewrite and run once more; red on an untouched spec →
-not this command's problem: an issue, and say so. Record the run in `docs/verif/<id>.md`
-(@templates/verification-record.md), with its duration.
-
-One commit: `test(e2e): prune the suite — <before> → <after> tests`.
+As /ks-chore, Phase 4: the `implementer`, chore mode, on the validated plan. Its brief adds:
+delete and rewrite exactly as the plan says, nothing more; a rewrite keeps the effect
+assertion, cuts the matrix to its one representative case, and moves copy selectors to a role
+or a `data-testid`. Its verification is **one run** of `<E2E>` over the whole remaining suite,
+against the sandbox, recorded with its duration. Red on a spec it touched → fix the rewrite
+and run once more; red on an untouched spec → not this chore's problem: an issue. One commit:
+`test(e2e): prune the suite — <before> → <after> tests`.
 
 ## Phase 5 — Land it
 
-There is no review gate: the human validated each deletion at the checkpoint, and no
-product behavior changed. Follow `Merge mode` and `Ship confirmation` as /ks-ship does —
-squash, PR or local merge, then its cleanup on a proven merge only.
+As /ks-chore, Phase 5: no review gate — the human validated each deletion at the checkpoint,
+and no product behavior changed.
 
 End with the totals before → after, the run's duration, and the issues opened.

@@ -44,5 +44,8 @@ besoin de piloter ou inspecter une phase → commandes unitaires.
 
 Où en est le projet (avancement par story, prochaine commande) : /ks-status
 
+Travail qui ne change pas le produit (doc, contenu, tests, outillage) : /ks-chore <demande> —
+mini-plan validé, implementer, vérification ciblée, pas de review. Une demande = un chore.
+
 Suite E2E trop lente ou fragile : /ks-test-prune — audite chaque spec (garder, réécrire,
 supprimer), tu valides la liste, puis il élague dans son propre worktree.
