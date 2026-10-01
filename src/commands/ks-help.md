@@ -43,3 +43,6 @@ commandes unitaires. Il s'arrête sur 2 questions bloquantes : valider le plan
 besoin de piloter ou inspecter une phase → commandes unitaires.
 
 Où en est le projet (avancement par story, prochaine commande) : /ks-status
+
+Suite E2E trop lente ou fragile : /ks-test-prune — audite chaque spec (garder, réécrire,
+supprimer), tu valides la liste, puis il élague dans son propre worktree.

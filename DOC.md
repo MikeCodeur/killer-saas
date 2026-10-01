@@ -51,10 +51,12 @@ Format: one setting per line, `Name: value`, no trailing comment. The value is e
 | `Verification mode` | `record` (the implementer records what it ran, the reviewer checks the record) · `rerun` (the reviewer runs everything itself) |
 | `Full suite` | when the whole unit suite runs: `execute-end` · `ship` · `both` |
 | `E2E stage` | when the end-to-end suite runs: `execute-end` · `ship` · `ci` · `—` |
-| `E2E scope` | how far it goes; `nominal` is one happy path |
+| `E2E scope` | what the ship's single run covers: `story` (the story's own specs plus `E2E smoke`) · `full` (the whole suite, normally CI's job) |
+| `E2E smoke` | the few specs every ship also runs — sign-in and the core loop. `—` is valid |
 | `E2E browsers` | browsers for the story cycle; ship always runs them all |
 | `Build stage` | when the production build runs: `ship-if-route` · `ship` · `review` · `ci` · `—` |
 | `Issue tracker` · `Worktree root` | where defects go, where worktrees live |
+| `Sandbox port base` · `Sandbox URL vars` · `Sandbox schema` · `Sandbox reset` | a story worktree's own port (base + story number), the URL variables that must follow it, the paths that call for a dedicated database, the reset-and-seed command — read by the `story-sandbox` skill |
 
 Below the settings, `AGENTS.local.md` carries the **project commands** — `Package manager`, `Test`, `Typecheck`, `E2E`, `Build` — and the **project conventions**, filled by `/ks-architect`. The commands are quoted verbatim by every agent that runs anything; none is ever invented.
 
@@ -152,6 +154,8 @@ Every later phase resolves the absolute path and verifies the exact branch. Miss
 
 **/ks-status** — derives the project's state from the files: settings, framing docs, and per story — complexity, research, design, plan (draft or validated, `flow` or `full`), checkbox progress, verification record, review verdict, PR/merge state, dependency blocks — then prints the next useful command per story and for the project. Nothing is stored: the files are the state.
 
+**/ks-test-prune** — prunes an existing end-to-end suite to the doctrine, on demand and outside any story. It audits every spec — what it asserts as an effect versus what it only finds visible, its matrices, its selectors on copy, the lower-layer test that already covers it — and gives each a verdict: keep, rewrite or delete. A human validates the list (deleting a test is never the agent's call), then it applies it in its own worktree, runs the remaining suite once, and lands it per `Merge mode`. The only product change it may make is adding a `data-testid`.
+
 ## Data & storage
 
 Everything the pipeline produces is markdown under `docs/`, versioned by git. No database, no state file, no external tracker.
@@ -183,8 +187,8 @@ Five building blocks:
 
 ### The subagents
 
-- **implementer** (`opus`, `testing-doctrine` preloaded) — implements the plan task by task under `Test budget`. Touches neither the architecture nor the rules, adds nothing out of scope, and records what it ran before committing.
-- **reviewer** (`review-antihallu` + `testing-doctrine` preloaded, read-only apart from the restored mutation of the bite proof) — fresh eyes on code it didn't write. Judges, doesn't fix. Ends by naming what it could NOT verify. A single critical = ship refused.
+- **implementer** (`opus`, `testing-doctrine` + `story-sandbox` preloaded) — implements the plan task by task under `Test budget`. Touches neither the architecture nor the rules, adds nothing out of scope, and records what it ran before committing.
+- **reviewer** (`review-antihallu` + `testing-doctrine` + `story-sandbox` preloaded, read-only apart from the restored mutation of the bite proof) — fresh eyes on code it didn't write. Judges, doesn't fix. Ends by naming what it could NOT verify. A single critical = ship refused.
 - **stories-reviewer** (`stories-review` preloaded, read-only, no shell) — reads the breakdown against the PRD perimeter. Reports, never rewrites the stories.
 
 Workspace creation is deliberately **not** a subagent of the method: the method says the work happens in `.worktrees/<id>` on `feature/<id>` and lets the environment's own tooling build it.
@@ -199,6 +203,7 @@ Model policy: the reviewers use `model: inherit` — the review runs with whatev
 - `stories-review` — breakdown defects: perimeter coverage, graveyard leaks, dependency order (preloaded in `stories-reviewer`)
 - `testing-doctrine` — what to test, where, how much, when to run it (preloaded in `implementer` and `reviewer`)
 - `design-doctrine` — how a screen is derived from the design system (loaded by the design commands)
+- `story-sandbox` — a story worktree's own port, database and environment, and the end-to-end run against them (preloaded in `implementer` and `reviewer`)
 
 The last two exist for a structural reason: `AGENTS.md` is loaded automatically in **every** agent context, and a project's `AGENTS.local.md` is concatenated onto it. Doctrine that only two agents act on does not belong in the file everyone pays for.
 

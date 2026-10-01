@@ -23,7 +23,28 @@ slow: a suite that takes half an hour to run is a suite nobody runs.
 | Persistence | Only what no reading catches: the idempotency ordering of a retryable mutation, and the tenant/ownership clause of each query. Call the repository **directly** — the service refuses upstream, so an applicative call never reaches the guard. |
 | Adapter (HTTP route, server action, controller) | Only what the service does not do: payload parsing, field clearing, status mapping. **An adapter never re-tests a 403** — it verifies once that a refusal becomes a 403, never per role and never per rule. |
 | Component / view | Almost none. Only genuine conditional logic of its own; rendering a list is not a rule. |
-| End-to-end | One scenario, for what unit tests structurally cannot see — typically a side effect written inside a transaction, which mocked repositories hide. |
+| End-to-end | One scenario, for what unit tests structurally cannot see — typically a side effect written inside a transaction, which mocked repositories hide. The rules below. |
+
+**End-to-end, specifically**
+
+An end-to-end run costs a cold server, a migration, a seed and a browser, and the suite is
+replayed by every story after this one. Measured on a real project: 86 specs, 216 tests,
+seven minutes a run, and most of the reds were specs repaired for a wording change rather
+than a broken feature.
+
+- **One spec per story, one scenario in it** — none when no unit test is structurally blind
+  to what the story does.
+- **It asserts an effect**: a URL reached, a row persisted and read back, a real HTTP status,
+  a refusal enforced by the server. **A label, a heading or a link merely being visible is not
+  an end-to-end assertion** — if the screen must be looked at, look at it in a browser and
+  record it.
+- **No matrix.** Locales × themes × viewports, every route in a loop, every role: each one
+  belongs to the layer that owns it (policy test, i18n check, visual check), or nowhere.
+  Written inside one `test()`, it still counts as what it replays.
+- **Select by role, or by a `data-testid` where the visible text is copy that can change.**
+  A wording change must not break a spec.
+- **A story does not edit another story's spec**, unless its own change legitimately breaks
+  it — and then the verification record says which, and why.
 
 **Four cuts, each measured in real use**
 
@@ -69,7 +90,7 @@ setting in `AGENTS.local.md`.
 | Focused suite | after each task — the working loop. Target the task's own test files, never the whole project | — |
 | Full suite | **once**, after the last task | `Full suite` |
 | Type check | **once at the very end, after the last edit, and not optional** — most runners transpile without checking types and most linters do not type, so a type error in a test file passes lint, passes the suite, and fails CI | — |
-| End-to-end | **once, at ship, just before the merge** — never in the loop, never twice: a run costs a cold server start, a migration, a seed and a browser driver | `E2E stage` · `E2E scope` · `E2E browsers` |
+| End-to-end | **once, at ship, just before the merge** — never in the loop, never twice: a run costs a cold server start, a migration, a seed and a browser driver. At ship it is the story's own specs plus `E2E smoke`; the whole suite belongs to CI | `E2E stage` · `E2E scope` · `E2E smoke` · `E2E browsers` |
 | Production build | at ship, and **only when a route or a manifest moved** — that is the one rupture a type check cannot see. A modern build type-checks on its way, so it is the build or the type check, never both | `Build stage` |
 | Format | never as a repo-wide sweep — format the staged files at commit; a story is one commit | — |
 

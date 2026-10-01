@@ -46,7 +46,11 @@ DOM structure, static labels, prop echoes and inventories are not coverage.
 *Judge the volume.* `Test budget` per story, more only if the plan justified it. A permission
 matrix replayed per command, an enum tested exhaustively, an adapter re-asserting a 403 the
 policy already owns — each is a finding, classified minor, and worth naming because CI time
-is a real cost.
+is a real cost. **The same for the story's end-to-end spec**, against the doctrine's
+end-to-end rules: a spec that only asserts labels are visible, a locale/theme/viewport or
+route matrix, a selector on copy that can change, a scenario a unit test already covers, an
+edit to another story's spec the record does not justify — each a minor finding, named with
+its `file:line`.
 
 *Prove the bite.* Pick the one or two invariants the story turns on (a guard, predicate, state
 transition or query clause) and neutralize them: invert the condition, return the opposite

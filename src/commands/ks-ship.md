@@ -19,13 +19,18 @@ Run: `grep -q '^Ship allowed: yes' docs/reviews/<id>.md`
 If the file is missing or the command fails, STOP immediately: "Ship blocked — review missing or negative. Run /ks-review <id>." Nothing below runs without a passing gate.
 
 Then proceed:
-1. Read `Merge mode`, `Target branch`, `Ship confirmation`, the stages (`Full suite`, `E2E stage`, `E2E scope`, `Build stage`) and the project commands from AGENTS.local.md. Missing file or missing setting → STOP: "No project settings. Run /ks-setup." Never assume a mode — every step below branches on them.
+1. Read `Merge mode`, `Target branch`, `Ship confirmation`, the stages (`Full suite`, `E2E stage`, `E2E scope`, `E2E smoke`, `Build stage`) and the project commands from AGENTS.local.md. Missing file or missing setting → STOP: "No project settings. Run /ks-setup." Never assume a mode — every step below branches on them.
 2. Without switching branches, commit docs/reviews/<id>.md on the already verified feature branch if not already committed (the PR must carry its review). Then run the **exit gate — the one place the expensive checks run in the whole cycle**, per the stages in AGENTS.local.md, using the project's own commands quoted verbatim:
    - **Unit suite.** `Full suite: execute-end` (the default) → it already ran in Execute, and docs/verif/<id>.md proves it for this exact tree: check `ks-gate verif-current <id>` instead of re-running, and run `<Test>` only if that check fails. `ship` or `both` → run `<Test>` in full here.
-   - **End-to-end.** `E2E stage: ship` → run `<E2E>` once, at `E2E scope`, on every browser the project configures. This is the cycle's only end-to-end run; nothing upstream is allowed to have made it.
+   - **End-to-end.** `E2E stage: ship` → run `<E2E>` **once**, on every browser the project configures, against the story's sandbox (`story-sandbox` skill: production build on the story's port). `E2E scope: story` (or the older `nominal`) → only the spec files the story's diff adds or changes, plus `E2E smoke`; `full` → the whole suite. This is the cycle's only end-to-end run; nothing upstream is allowed to have made it.
+
+     **Red → no second run and no debugging here.** Classify the failure from that one output, report it, and stop:
+     - **infra** — the server, port, database or seed failed before any assertion ran → fix the sandbox per the `story-sandbox` skill, then rerun this command;
+     - **story** — a spec the story adds or changes, or a smoke spec on a path the diff touches → back to `/ks-execute <id>` in fix mode, with the failing spec and its error;
+     - **base** — a smoke spec on a path the diff does not touch → it is red on the target branch too: an issue in the issue tracker, and the human decides whether this story ships over it.
    - **Production build.** `Build stage: ship` → run `<Build>`. `ship-if-route` → run it only when the story's diff moved a route, a manifest or the file-based routing — the one rupture a type check cannot see; otherwise skip it and say so.
    - **`ci` for any of them** → do not run it here: read the branch's checks (`gh pr checks`) and stop unless they are green.
-   A command given as `—` does not exist in this project: say so, never substitute one. Any red → stop, and back to `/ks-execute <id>` in fix mode. Nothing merges on a red gate.
+   A command given as `—` does not exist in this project: say so, never substitute one. Any other red → stop, and back to `/ks-execute <id>` in fix mode. Nothing merges on a red gate.
 3. `Merge mode: local` → skip this step entirely, there is no PR. Otherwise: if a PR for feature/<id> already exists, don't open a duplicate — check its state: MERGED → jump straight to the Cleanup step (confirming the deployment on the way); OPEN → continue. Otherwise push the branch and open a clean PR from feature/<id> to the target branch: clear title, structured description (what, why, how to test), readable diff. Include the review verdict (max severity + findings summary) in the PR body.
 
 ## Step 4 — Merge (per the project's settings)

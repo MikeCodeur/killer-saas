@@ -70,7 +70,7 @@ After a global install, drop the per-project files (templates + rules) in each p
     ~/.claude/killer-saas/install.sh init                 # Claude
     ~/.claude/killer-saas/install.sh init --target codex  # Codex
 
-`AGENTS.md` (the rules) is shared and read natively by both tools; on Claude a one-line `CLAUDE.md` imports it. The 6 skills are the open `SKILL.md` standard, so they carry over unchanged; the 16 `ks-*` commands are emitted as Codex skills. See the fidelity matrix in [DOC.md](DOC.md).
+`AGENTS.md` (the rules) is shared and read natively by both tools; on Claude a one-line `CLAUDE.md` imports it. The 7 skills are the open `SKILL.md` standard, so they carry over unchanged; the 17 `ks-*` commands are emitted as Codex skills. See the fidelity matrix in [DOC.md](DOC.md).
 
 When maintaining killer-saas itself, edit only `src/AGENTS.md`. The root
 `AGENTS.md` and `CLAUDE.md` are ignored local-install artifacts; `CLAUDE.md`
@@ -133,6 +133,9 @@ What it does — and doesn't:
 
     # the pipeline map
     /ks-help
+
+    # an end-to-end suite grown slow or brittle:
+    /ks-test-prune
 
 ## Autonomous mode — `/goal`
 

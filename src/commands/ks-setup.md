@@ -31,6 +31,9 @@ If `AGENTS.local.md` already exists → do NOT overwrite it. Show its current se
 Never ask what the code states. Look for the package manager (which lockfile is present),
 and the scripts the project actually declares (its package manifest, task runner or Makefile).
 Note the default branch (`git symbolic-ref refs/remotes/origin/HEAD`, else the current branch).
+For the `Sandbox` settings: the environment variables that hold the app's own URL (auth base
+URL, public app URL, trusted origins), the schema and migration directories, and a declared
+reset-and-seed script. Not found → `—`.
 Anything you find becomes the pre-filled answer, not a question.
 
 ### Step 2 — Ask the four questions (AskUserQuestion)
@@ -51,7 +54,8 @@ validates plans by hand confirms its ships by hand.
 
 ### Step 3 — Write it
 Write `AGENTS.local.md` from @templates/agents-local.md, filled with the answers and the
-defaults. Keep its shape exactly: one setting per line, `Name: value`, **no trailing comment** —
+defaults. A setting whose accepted values do not include `—` never gets one: nobody asked
+about it → it keeps the template's default. Keep its shape exactly: one setting per line, `Name: value`, **no trailing comment** —
 the commands read the value as everything after the colon, so a comment on the line becomes part
 of the value. The accepted values stay in the table below the block. Leave "Project conventions"
 as its placeholder — `/ks-architect` fills it from the boilerplate.

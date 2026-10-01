@@ -58,7 +58,8 @@ the same ship. Nothing is relaxed: dedicated worktree, validated plan, neutraliz
 `Ship allowed` gate, test budget.
 
 Utilities: `/ks-orchestrator` (the whole cycle, with the two human checkpoints),
-`/ks-status` (state derived from the files), `/ks-help`.
+`/ks-status` (state derived from the files), `/ks-help`,
+`/ks-test-prune` (an existing end-to-end suite pruned to the doctrine, on demand).
 
 **Run the commands. Never hand-roll the agent call.** They carry what the pipeline has
 learned — fix mode, the subagent definitions, the gates. A briefing written by hand replaces
@@ -87,8 +88,9 @@ or check out a feature branch in the repository base directory.
 **The method says where the work happens, not how the workspace is built.** The entry command
 — `/ks-research` or `/ks-flow` — creates or verifies the worktree, through a
 `worktree-manager` subagent when the environment provides one, otherwise with plain
-`git worktree add`. Either way it imports the untracked `.env*` files and installs
-dependencies there, and **never runs a baseline test suite**: the default branch's state is
+`git worktree add`. Either way it imports the untracked `.env*` files, installs
+dependencies, and sets up the story's port and database per the `story-sandbox` skill — then
+**never runs a baseline test suite**: the default branch's state is
 not this story's problem.
 
 Every later phase resolves the absolute path and verifies the exact branch. Missing worktree,
@@ -120,7 +122,7 @@ there, with its `file:line`.
 - `/ks-ship` refuses to run unless that file exists and contains the line `Ship allowed: yes`. No file, no line, or `no` → ship blocked. No exceptions.
 - **Only a critical blocks.** A `major` is a real defect — traced in the report, fixed in a next cycle; a `minor` is style. Neither reopens a fix loop: a loop is a full implementation pass plus a full review pass, and spending one on naming costs half a story and closes no defect.
 - After a blocked review, `/ks-execute` runs in fix mode: the review findings are fed to the implementer and fixed before anything else. Two loops at most.
-- Before the story commit the implementer writes `docs/verif/<id>.md` (@templates/verification-record.md): the commands it ran, their exit codes, and the `Tree:` those runs covered. `ks-gate verif-current <id>` answers one question mechanically — does that record still describe the committed code, same tree outside `docs/`? With `Verification mode: record`, the review takes a current record as proof and does not re-run the suite or the type check. Missing, incomplete or stale → the reviewer runs them itself. An absent record is never a pass.
+- Before the story commit the implementer writes `docs/verif/<id>.md` (@templates/verification-record.md): the commands it ran, their exit codes, and the `Tree:` those runs covered. `ks-gate verif-current <id>` answers one question mechanically — does that record still describe the committed code, same tree outside `docs/`? With `Verification mode: record` — also what a missing or `—` setting means; only `rerun` replays — the review takes a current record as proof and does not re-run the suite or the type check. Missing, incomplete or stale → the reviewer runs them itself. An absent record is never a pass.
 - A plan executes only if its frontmatter says `validated: yes` — set by the human validation checkpoint (/ks-plan or the orchestrator), never by the file merely existing. /ks-execute is fail-closed on it.
 
 ## Ship strategy
@@ -171,7 +173,7 @@ than no test.**
 returns the same answer. Focused suite per task, on that task's own files; the full suite
 once after the last task; the type check once after the last edit; the end-to-end suite and
 the production build once at ship, never inside the cycle. Stages are settings:
-`Full suite`, `E2E stage`, `E2E scope`, `E2E browsers`, `Build stage`.
+`Full suite`, `E2E stage`, `E2E scope`, `E2E smoke`, `E2E browsers`, `Build stage`.
 
 Where the tests go, the four cuts, the six shapes of a test that names an invariant without
 exercising it, and the neutralization technique: the `testing-doctrine` skill, preloaded in

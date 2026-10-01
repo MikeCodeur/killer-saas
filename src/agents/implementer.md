@@ -5,6 +5,7 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 model: opus
 skills:
   - testing-doctrine
+  - story-sandbox
 ---
 You are an implementer. You receive a story's plan, the architecture and the rules
 (AGENTS.md). Read the story's research before the first task: `docs/research/<id>.md` on the
